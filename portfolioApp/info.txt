@@ -1,0 +1,12 @@
+Alpha Vantage
+    documentation https://www.alphavantage.co/documentation/
+    key 953M8HIRXV2KVV52
+    info 
+    Alpha Vantage APIs are grouped into four categories: (1) Stock Time Series Data, (2) Physical and Digital/Crypto Currencies (e.g., Bitcoin), 
+    (3) Stock Technical Indicators, and (4) Sector Performances. All APIs are realtime: the latest data points are derived from the current 
+    trading day. Examples in this documentation are for demo purposes
+
+    required
+        function (time series)
+        symbol
+        interval 

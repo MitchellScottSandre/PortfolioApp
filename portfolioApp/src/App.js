@@ -5,11 +5,11 @@ import { createStore } from 'redux'
 
 const App = () => {
     return (
-        <Provider store={createStore()}>
+        // <Provider store={createStore()}>
             <View style={{ flex: 1 }}>
                 <Text>Hello</Text>
             </View>
-        </Provider>
+        // </Provider>
     )
 }
 
