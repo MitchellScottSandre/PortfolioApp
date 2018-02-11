@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import ReduxThunk from 'redux-thunk'
-// import { Platform, AppRegistry } from 'react-native'
 import { createStore, applyMiddleware } from 'redux'
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
@@ -18,14 +17,14 @@ export default class App extends Component {
 
     constructor(props) {
         super(props)
+
         store.subscribe(this.onStoreUpdate.bind(this))
         store.dispatch(appActions.appInitialized())
-        console.log('aaaa')
     }
 
     onStoreUpdate() {
         const { root } = store.getState().root
-        console.log('bbbbb', root)
+      
         if (this.currentRoot !== root) {
           this.currentRoot = root
           this.startApp(root)
@@ -39,9 +38,9 @@ export default class App extends Component {
                 Navigation.startSingleScreenApp({
                     screen: {
                         screen: 'PortfolioApp.WelcomeScreen',
-                        title: 'Welcome',
-                        navigatorStyle: {},
-                        navigatorButtons: {}
+                        title: 'aaaaa',
+                        navigatorButtons: {},
+
                     }
                 })
                 return
