@@ -1,0 +1,36 @@
+Alpha Vantage:
+    documentation 
+        https://www.alphavantage.co/documentation/
+    key 
+        953M8HIRXV2KVV52
+    urlRequest
+        https://www.alphavantage.co/query?
+    info 
+        Alpha Vantage APIs are grouped into four categories: (1) Stock Time Series Data, (2) Physical and Digital/Crypto Currencies (e.g., Bitcoin), 
+        (3) Stock Technical Indicators, and (4) Sector Performances. All APIs are realtime: the latest data points are derived from the current 
+        trading day. Examples in this documentation are for demo purposes
+    required    
+        function (which series you are using)
+    TIME_SERIES_INTRADAY
+        required
+            symbol
+            interval 
+            apikey
+        optional
+            outputsize // compact // full
+            datatype=json
+    TIME_SERIES_DAILY
+    Batch Stock Quotes
+        symbols
+    Foreign Exchange:
+        crypto currency exchange rate
+    Stock Technical Indicators
+        Simple Moving Average
+        Exponential Moving Average
+        Weighted Moving Average
+        double exponential moving average
+        triple exponential moving average
+        triangular moving average
+        Kaufman adaptive moving average
+        MESA adaptive moving average
+        etc etc
