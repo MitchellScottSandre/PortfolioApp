@@ -2,6 +2,7 @@
   "extends": "rallycoding",
   "rules": {
     "arrow-body-style": 0,
-    "semi": [2, "never"]
+    "semi": [1, "never"],
+    "max-len": [1, {"code": 150}]
   }
 }

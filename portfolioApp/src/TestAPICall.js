@@ -3,11 +3,10 @@ import axios from 'axios'
 import { View } from 'react-native'
 import { API } from './Constants'
 
-class TestCall extends Component {
+class TestAPICall extends Component {
     componentWillMount() {
         const { baseUrl, apiKey } = API.ALPHA_VANTAGE
-        let url = `${baseUrl}function=TIME_SERIES_DAILY&symbol=MSFT&apikey=${apiKey}&datatype=json`
-        console.log(url)
+        const url = `${baseUrl}function=TIME_SERIES_DAILY&symbol=MSFT&apikey=${apiKey}&datatype=json`
         axios.get(url)
         .then((response) => {
             console.log(response)
@@ -16,9 +15,9 @@ class TestCall extends Component {
 
     render() {
         return (
-            <View></View>
+            <View />
         )
     }
 }
 
-export default TestCall
+export default TestAPICall
