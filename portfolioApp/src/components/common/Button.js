@@ -16,7 +16,10 @@ const Button = (props) => {
 const styles = {
     buttonStyle: {
         padding: 5,
-        margin: 10
+        backgroundColor: 'grey', 
+        borderRadius: 10, 
+        margin: 10,
+        width: 200
     },
     textStyle: {
         fontSize: 22,

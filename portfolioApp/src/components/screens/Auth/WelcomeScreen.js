@@ -6,6 +6,13 @@ class WelcomeScreen extends Component {
     static navigatorStyle = {
         navBarHidden: true
     }
+
+    newUserOnPress() {
+        this.props.navigator.push({
+            screen: 'PortfolioApp.NewUserScreen',
+            title: 'New User'
+        })
+    }
     
     render() {
         const { titleTextStyle, containerStyle } = styles
@@ -13,10 +20,10 @@ class WelcomeScreen extends Component {
         return (
             <View style={containerStyle}>
                 <Text style={titleTextStyle}>Portfolio_App</Text>
-                <Button>
-                    Login
-                </Button>
-                <Button>
+                {/* <Button>
+                    Current User
+                </Button> */}
+                <Button onPress={this.newUserOnPress.bind(this)}>
                     New User
                 </Button>
             </View>
@@ -27,7 +34,7 @@ class WelcomeScreen extends Component {
 const styles = {
     containerStyle: {
         justifyContent: 'space-around',
-        // alignItems: 'center',
+        alignItems: 'center',
         flex: 1
     }, 
     titleTextStyle: {

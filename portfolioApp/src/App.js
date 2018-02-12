@@ -38,9 +38,7 @@ export default class App extends Component {
                 Navigation.startSingleScreenApp({
                     screen: {
                         screen: 'PortfolioApp.WelcomeScreen',
-                        title: 'aaaaa',
-                        navigatorButtons: {},
-
+                        navigatorButtons: {}
                     }
                 })
                 return

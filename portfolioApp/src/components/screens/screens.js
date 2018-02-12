@@ -4,4 +4,5 @@ import * as AuthScreens from './Auth'
 export default (store, Provider) => {
     // Auth Screens
     Navigation.registerComponent('PortfolioApp.WelcomeScreen', () => AuthScreens.WelcomeScreen, store, Provider)
+    Navigation.registerComponent('PortfolioApp.NewUserScreen', () => AuthScreens.NewUserScreen, store, Provider)
 }
