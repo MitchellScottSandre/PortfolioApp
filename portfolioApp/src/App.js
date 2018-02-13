@@ -1,12 +1,13 @@
 import { Component } from 'react'
 import ReduxThunk from 'redux-thunk'
+import firebase from 'firebase'
 import { createStore, applyMiddleware } from 'redux'
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
-import * as appActions from './actions'
 import registerScreens from './components/screens/screens'
 import * as types from './actions/types'
+import * as appActions from './actions'
 
 const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore)
 const store = createStoreWithMiddleware(reducer)
@@ -20,6 +21,17 @@ export default class App extends Component {
 
         store.subscribe(this.onStoreUpdate.bind(this))
         store.dispatch(appActions.appInitialized())
+
+        const config = {
+            apiKey: "AIzaSyBsfZWXjnefkcCgqLJWxvVmS1HeOZocJCg",
+            authDomain: "portfolio-45f16.firebaseapp.com",
+            databaseURL: "https://portfolio-45f16.firebaseio.com",
+            projectId: "portfolio-45f16",
+            storageBucket: "",
+            messagingSenderId: "319856504755"
+          }
+
+        firebase.initializeApp(config)
     }
 
     onStoreUpdate() {
@@ -32,13 +44,13 @@ export default class App extends Component {
     }
 
     startApp(root) {
-        console.log('startApp called', root)
         switch (root) {
             case types.WELCOME_SCREEN:
                 Navigation.startSingleScreenApp({
                     screen: {
                         screen: 'PortfolioApp.WelcomeScreen',
-                        navigatorButtons: {}
+                        navigatorButtons: {},
+                        navigatorStyle: {}
                     }
                 })
                 return

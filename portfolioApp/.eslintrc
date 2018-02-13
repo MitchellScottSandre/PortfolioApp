@@ -3,6 +3,8 @@
   "rules": {
     "arrow-body-style": 0,
     "semi": [1, "never"],
-    "max-len": [1, {"code": 150}]
+    "max-len": [1, {"code": 150}],
+    "quotes": [0],
+    "no-underscore-dangle": [0]
   }
 }

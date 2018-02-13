@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 import { connect } from 'react-redux'
-import { createNewUserAccount } from '../../../actions/AuthenticationActions'
+import { loginUser } from '../../../actions/AuthenticationActions'
 import AuthForm from './AuthForm'
 
-class NewUserScreen extends Component {
+class LoginUserScreen extends Component {
     static navigatorStyle = {
         // navBarHidden: true
     }
@@ -12,7 +12,7 @@ class NewUserScreen extends Component {
     onPress() {
         const { email, password } = this.props
 
-        this.props.createNewUserAccount({ email, password })
+        this.props.loginUser({ email, password })
     }
 
     render() {
@@ -20,7 +20,7 @@ class NewUserScreen extends Component {
 
         return (
             <View style={containerStyle} >
-                <AuthForm buttonText='Create' onPress={this.onPress.bind(this)} />
+                <AuthForm buttonText='Sign In' onPress={this.onPress.bind(this)} />
             </View>
         )
     }
@@ -40,4 +40,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { createNewUserAccount })(NewUserScreen)
+export default connect(mapStateToProps, { loginUser })(LoginUserScreen)

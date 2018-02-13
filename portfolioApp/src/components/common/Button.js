@@ -17,7 +17,7 @@ const styles = {
     buttonStyle: {
         padding: 5,
         backgroundColor: 'grey', 
-        borderRadius: 10, 
+        borderRadius: 20, 
         margin: 10,
         width: 200
     },

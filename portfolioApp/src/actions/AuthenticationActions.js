@@ -1,5 +1,12 @@
 // import firebase from 'firebase'
-import { EMAIL_INPUT_CHANGED, PASSWORD_INPUT_CHANGED } from './types'
+import firebase from 'firebase'
+import { 
+    EMAIL_INPUT_CHANGED, 
+    PASSWORD_INPUT_CHANGED, 
+    AUTHORIZATION_START, 
+    AUTHORIZATION_SUCCESS,
+    AUTHORIZATION_FAIL
+} from './types'
 
 export const emailInputChanged = (text) => {
     return {
@@ -15,3 +22,33 @@ export const passwordInputChanged = (text) => {
     }
 } 
 
+export const createNewUserAccount = ({ email, password }) => {
+    return (dispatch) => {
+        dispatch({ type: AUTHORIZATION_START })
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((user) => authorizationSuccess(dispatch, user))
+            .catch(() => authorizationFail(dispatch))
+    }
+}
+
+export const loginUser = ({ email, password }) => {
+    return (dispatch) => {
+        dispatch({ type: AUTHORIZATION_START })
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((user) => authorizationSuccess(dispatch, user))
+        .catch(() => authorizationFail(dispatch))
+    }
+}
+
+export const authorizationSuccess = (dispatch, user) => {
+    dispatch({
+        type: AUTHORIZATION_SUCCESS, 
+        payload: user 
+    })
+}
+
+export const authorizationFail = (dispatch) => {
+    dispatch({
+        type: AUTHORIZATION_FAIL
+    })
+}
