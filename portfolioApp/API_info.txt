@@ -19,6 +19,7 @@ Alpha Vantage:
         optional
             outputsize // compact // full
             datatype=json
+            
     TIME_SERIES_DAILY
     Batch Stock Quotes
         symbols

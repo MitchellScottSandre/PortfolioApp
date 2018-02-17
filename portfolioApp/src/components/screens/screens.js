@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation'
-import { WelcomeScreen } from './Auth/WelcomeScreen'  // // import * as AuthScreens from './Auth'
+import WelcomeScreen from './Auth/WelcomeScreen'  // // import * as AuthScreens from './Auth'
 import LoginUserScreen from './Auth/LoginUserScreen'
 import NewUserScreen from './Auth/NewUserScreen' // this uses export default connect
 import PortfolioScreen from './Cards/Portfolio/PortfolioScreen'

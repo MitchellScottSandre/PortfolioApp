@@ -10,17 +10,15 @@ class SmartCard extends Component {
         const { title } = this.props
         const { containerStyle } = styles
         return (
-           <Card 
-            title={title}
-            containerStyle={containerStyle}
-           />
+           <Card title={title} containerStyle={containerStyle}>
+                {this.props.children}
+           </Card>
         )
     }
 }
 
 const styles = {
     containerStyle: {
-        height: 100,
         flex: 1
     }
 }

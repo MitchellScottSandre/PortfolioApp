@@ -28,7 +28,22 @@ export const createNewUserAccount = ({ email, password }) => {
     return (dispatch) => {
         dispatch({ type: AUTHORIZATION_START })
         firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then((user) => authorizationSuccess(dispatch, user))
+            .then((user) => {
+                const userId = user.uid
+                firebase.database().ref(`/users/${userId}`).set({
+                    userId,
+                    email
+                    // investments: {
+                    //     stocks: {},
+                    //     etfs: {},
+                    //     bonds: {},
+                    //     crypto: {},
+                    //     mutualFunds: {}
+                    // }
+                })
+                authorizationSuccess(dispatch, user)
+            })
+            // .then((user) => authorizationSuccess(dispatch, user))
             .catch(() => authorizationFail(dispatch))
     }
 }

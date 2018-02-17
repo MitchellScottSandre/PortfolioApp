@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import { Button } from 'react-native-elements'
+import { connect } from 'react-redux' // USE ONLY FOR TESTING
+import { loginUser } from '../../../actions/AuthenticationActions' // USE ONLY FOR TESTING
 
 class WelcomeScreen extends Component {
     static navigatorStyle = {
         navBarHidden: true
+    }
+
+    // USE ONLY FOR TESTING
+    componentWillMount() {
+        this.props.loginUser({ email: 'a@a.com', password: 'aaaaaa' })
     }
 
     newUserOnPress() {
@@ -62,4 +69,4 @@ const styles = {
     }
 }
 
-export { WelcomeScreen }
+export default connect(null, { loginUser })(WelcomeScreen)
