@@ -7,6 +7,7 @@ const INITIAL_STATE = {
 export function root(state = INITIAL_STATE, action = {}) {
     switch (action.type) {
         case ROOT_CHANGED:
+            console.log('root reducer switching to', action.root)
             return {
                 ...state,
                 root: action.root

@@ -1,6 +1,7 @@
 // Root Types
 export const ROOT_CHANGED = 'root_changed'
 export const WELCOME_SCREEN = 'welcome_screen'
+export const MAIN_SCREENS = 'main_screens'
 
 // Authentication Types
 export const EMAIL_INPUT_CHANGED = 'email_input_changed'

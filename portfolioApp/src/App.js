@@ -49,9 +49,24 @@ export default class App extends Component {
                 Navigation.startSingleScreenApp({
                     screen: {
                         screen: 'PortfolioApp.WelcomeScreen',
-                        navigatorButtons: {},
-                        navigatorStyle: {}
+                        // navigatorButtons: {},
+                        // navigatorStyle: {}
                     }
+                })
+                return
+            case types.MAIN_SCREENS:
+                console.log('switching to main screens in app js')
+                Navigation.startTabBasedApp({
+                    tabs: [
+                        // {
+                        //     label: 'Snapshot', 
+                        //     screen: 'PortfolioApp.SnapshotScreen'
+                        // },
+                        {
+                            label: 'Portfolio',
+                            screen: 'PortfolioApp.PortfolioScreen'
+                        }
+                    ]     
                 })
                 return
             default:

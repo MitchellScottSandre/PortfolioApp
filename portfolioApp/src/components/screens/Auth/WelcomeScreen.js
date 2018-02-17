@@ -63,4 +63,3 @@ const styles = {
 }
 
 export { WelcomeScreen }
-// export default WelcomeScreen

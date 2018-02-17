@@ -10,7 +10,7 @@ const INITIAL_STATE = {
     email: '', 
     password: '',
     user: null,
-    error: '',
+    errorMessage: '',
     loading: false
 }
 
@@ -20,7 +20,7 @@ export default (state = INITIAL_STATE, action) => {
         case PASSWORD_INPUT_CHANGED: return { ...state, password: action.payload }
         case AUTHORIZATION_START: return { ...state, loading: true }
         case AUTHORIZATION_SUCCESS: return { INITIAL_STATE, user: action.payload }
-        case AUTHORIZATION_FAIL: return { ...state, loading: false, error: 'ERROR' }
+        case AUTHORIZATION_FAIL: return { ...state, loading: false, errorMessage: action.payload }
         default: return state
     }
 }

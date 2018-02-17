@@ -1,11 +1,13 @@
-// import firebase from 'firebase'
 import firebase from 'firebase'
+import { changeAppRoot } from '../actions/RootActions'
 import { 
     EMAIL_INPUT_CHANGED, 
     PASSWORD_INPUT_CHANGED, 
     AUTHORIZATION_START, 
     AUTHORIZATION_SUCCESS,
-    AUTHORIZATION_FAIL
+    AUTHORIZATION_FAIL,
+    // ROOT_CHANGED,
+    MAIN_SCREENS
 } from './types'
 
 export const emailInputChanged = (text) => {
@@ -41,10 +43,12 @@ export const loginUser = ({ email, password }) => {
 }
 
 export const authorizationSuccess = (dispatch, user) => {
+    console.log('authorization Success!, user: ', user)
     dispatch({
         type: AUTHORIZATION_SUCCESS, 
         payload: user 
     })
+    dispatch(changeAppRoot(MAIN_SCREENS))
 }
 
 export const authorizationFail = (dispatch) => {

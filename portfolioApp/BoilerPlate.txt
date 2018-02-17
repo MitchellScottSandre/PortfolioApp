@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
+import { connect } from 'react-redux'
 
-class NewUserScreen extends Component {
+class PortfolioScreen extends Component {
     render() {
         return (
-            <View />
+            <View><Text>aaaa</Text></View>
         )
     }
 }
 
-export { NewUserScreen }
+export default connect(null, {})(PortfolioScreen)
