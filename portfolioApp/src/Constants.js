@@ -9,6 +9,9 @@ const API = {
         functions: {
             batchStockQuotes: 'BATCH_STOCK_QUOTES'
         }
+    },
+    SYMBOL_SEARCH: {
+        baseUrl: 'http://d.yimg.com/aq/autoc?region=US&lang=en&query='
     }
 }
 

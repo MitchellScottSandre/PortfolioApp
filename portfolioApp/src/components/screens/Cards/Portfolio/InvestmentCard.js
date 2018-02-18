@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView } from 'react-native'
+import { Header } from 'react-native-elements'
 import SmartCard from '../common/SmartCard'
 import InvestmentListItem from './InvestmentListItem'
 // import { connect } from 'react-redux'
@@ -16,12 +17,19 @@ class InvestmentCard extends Component {
     }
     
     render() {
-        // const { listItems } = this.props
+        const { onPlusButtonPress } = this.props
         const { graphViewStyle } = styles
 
         return (
-            <SmartCard {...this.props} >
+            <SmartCard {...this.props} showPlusButton >
                 <View>
+                    <Header
+                        leftComponent={<Text style={{ color: 'white' }}>Stocks</Text>}
+                        rightComponent={{ icon: 'add', color: '#fff', onPress: onPlusButtonPress }}
+                        outerContainerStyles={{ height: 40, paddingLeft: 15, paddingRight: 15, paddingBottom: 0, paddingTop: 0, marginBottom: 20 }}
+                        innerContainerStyles={{ alignItems: 'center' }}
+                    />
+
                     <ScrollView>
                         {this._renderData()}
                     </ScrollView>

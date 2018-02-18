@@ -14,11 +14,15 @@ class StockCard extends Component {
     //     // TODO: check now time vs lastStockDataFetch time
     // }
 
+    _addStock() {
+        console.log('pressed')
+    }
+
     render() {
-        const { lastStockDataFetchTime, stocks, stockInfo } = this.props
+        const { stocks } = this.props
 
         return (
-            <InvestmentCard title='Stocks' data={stocks} />
+            <InvestmentCard title='Stocks' data={stocks} onPlusButtonPress={this._addStock.bind(this)} />
         )
     }
 }

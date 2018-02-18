@@ -7,10 +7,10 @@ import { Card } from 'react-native-elements'
 class SmartCard extends Component {
 
     render() {
-        const { title } = this.props
-        const { containerStyle } = styles
+        // const { title } = this.props
+        const { containerStyle, defaultTitleStyle } = styles
         return (
-           <Card title={title} containerStyle={containerStyle}>
+           <Card containerStyle={containerStyle} titleStyle={defaultTitleStyle}>
                 {this.props.children}
            </Card>
         )
@@ -20,6 +20,9 @@ class SmartCard extends Component {
 const styles = {
     containerStyle: {
         flex: 1
+    },
+    defaultTitleStyle: {
+        textAlign: 'left'
     }
 }
 

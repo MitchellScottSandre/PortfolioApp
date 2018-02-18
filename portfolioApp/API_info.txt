@@ -36,4 +36,8 @@ Alpha Vantage:
         MESA adaptive moving average
         etc etc
 
-qXhwK8Ej-Vb1QRXhxzgC QUANDL
+QUANDL:
+    qXhwK8Ej-Vb1QRXhxzgC
+
+Stock Searching:
+    http://d.yimg.com/aq/autoc?query=T&region=US&lang=en
