@@ -2,20 +2,22 @@ import React from 'react'
 import { View, Text } from 'react-native'
 
 const InvestmentListItem = (props) => {
-    const { name, symbol, value, change } = props.info
+    console.log('investment list item: props.info', props.info)
+    const { name, symbol, price, change, volume } = props.info
     const { cellContainerStyle } = styles
     // onpress
     return (
         <View style={cellContainerStyle}>
-            <Text>{name}</Text>
+            <Text>{name} {symbol} {price}</Text>
         </View>
     )
 }
 
 const styles = {
     cellContainerStyle: {
-        height: 90,
-        flex: 1
+        height: 40,
+        flex: 1,
+        flexDirection: 'row'
     }
 }
 

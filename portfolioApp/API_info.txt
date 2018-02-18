@@ -35,3 +35,5 @@ Alpha Vantage:
         Kaufman adaptive moving average
         MESA adaptive moving average
         etc etc
+
+qXhwK8Ej-Vb1QRXhxzgC QUANDL

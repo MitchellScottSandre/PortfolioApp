@@ -4,8 +4,7 @@ import {
 
 const INITIAL_STATE = {
     lastStockDataFetchTime: 0,
-    stocks: [],                 // symbol, name from Firebase
-    stockInfo: []               // financial info, from Alpha Vantage
+    stocks: [],                 
 }
 
 export default (state = INITIAL_STATE, action) => {

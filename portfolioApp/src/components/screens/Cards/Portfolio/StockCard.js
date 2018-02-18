@@ -10,14 +10,6 @@ class StockCard extends Component {
         this.props.investmentFetch(INVESTMENT_STOCKS)
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     const symbols = _.map(nextProps.stocks, (stock) => {
-    //         return stock.symbol
-    //     })
-
-    //     nextProps.stocksInfoFetch(symbols)
-    // }
-
     // shouldComponentUpdate() {
     //     // TODO: check now time vs lastStockDataFetch time
     // }
@@ -37,7 +29,6 @@ const mapStateToProps = state => {
     return {
         stocks: state.investments.stocks, 
         lastStockDataFetchTime: state.investments.lastStockDataFetchTime,
-        // stockInfo: state.investmentFetch.stockInfo
     }
 }
 
