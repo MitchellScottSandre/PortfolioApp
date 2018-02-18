@@ -23,7 +23,7 @@ class InvestmentCard extends Component {
             <SmartCard {...this.props} >
                 <View>
                     <ScrollView>
-                        {this._renderData()}
+                        {/* {this._renderData()} */}
                     </ScrollView>
 
                     <View style={graphViewStyle}>

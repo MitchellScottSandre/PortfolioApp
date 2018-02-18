@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text } from 'react-native'
 
 const InvestmentListItem = (props) => {
-    console.log(props)
     const { name, symbol, value, change } = props.info
     const { cellContainerStyle } = styles
     // onpress
