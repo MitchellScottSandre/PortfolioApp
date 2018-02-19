@@ -4,25 +4,27 @@ import CardScreen from '../common/CardScreen'
 import StockCard from './StockCard'
 // import { loginUser } from '../../../../actions/AuthenticationActions'
 
-const cards = [
-    <StockCard key='1' />,
-    // <StockCard key='2' />
-]
+// const cards = [
+//     <StockCard key='1' />,
+//     // <StockCard key='2' />
+// ]
 
 class PortfolioScreen extends Component {
     static navigatorStyle = {
         navBarHidden: true
     }
 
-    componentWillMount() {
-        // const email = 'a@a.com'
-        // const password = 'aaaaaa'
-        // this.props.loginUser({ email, password })
+    _getCards() {
+        // navigator={this.props.navigator}
+        return [
+            <StockCard key='1' />,
+            // <StockCard key='2' />
+        ]
     }
 
     render() {
         return (
-            <CardScreen cards={cards} />
+            <CardScreen cards={this._getCards()} />
         )
     }
 }

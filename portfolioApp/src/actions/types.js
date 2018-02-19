@@ -14,3 +14,12 @@ export const AUTHORIZATION_FAIL = 'authorization_fail'
 export const INVESTMENT_STOCKS = 'stocks'
 
 export const INVESTMENT_FETCH_SUCCESS = 'investment_fetch_success'
+export const INVESTMENT_FETCH_ALL_SUCCESS = 'investment_fetch_all_success'
+export const INVESTMENT_ADD_SUCCESS = 'investment_add_success'
+
+// Search Types
+export const SEARCH_TEXT_CHANGED = 'search_text_changed'
+export const SEARCH_FETCH_SUCCESS = 'search_fetch_success'
+
+export const SEARCH_ALL = 'search_all'
+export const SEARCH_STOCKS = 'search_stocks'

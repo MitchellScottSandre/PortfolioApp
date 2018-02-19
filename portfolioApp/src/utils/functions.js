@@ -17,3 +17,10 @@ export const mergeDataSetsByKeys = (dataSet1, dataSet2, key1, key2) => {
         }
     })
 }
+
+// export const addDataToUniqueArray = (dataSet, newEntry) => {
+//     console.log(dataSet)
+//     console.log(newEntry)
+//     console.log(_.includes(dataSet, newEntry))
+//     return _.includes(dataSet, newEntry) ? dataSet : [...dataSet, ...newEntry]
+// }

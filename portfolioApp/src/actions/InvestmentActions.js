@@ -5,11 +5,36 @@ import { API } from '../Constants'
 import { jsonToArray, mergeDataSetsByKeys } from '../utils/functions'
 import {
     INVESTMENT_FETCH_SUCCESS,
+    INVESTMENT_FETCH_ALL_SUCCESS,
     INVESTMENT_STOCKS
 } from './types'
 
+export const investmentAdd = (investmentType, name, symbol) => {
+    console.log('addInvestment', investmentType, name, symbol)
+    const { currentUser } = firebase.auth()
+
+    return (dispatch) => {
+        // console.log('includessssss:', _.includes(getState().investments.stocks, { name, symbol }))
+        firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}/${symbol}`)
+            .set({
+                name,
+                symbol
+            })
+            .then(() => {
+                let investments = null
+                switch (investmentType) {
+                    case INVESTMENT_STOCKS: 
+                        investments = [{ name, symbol }]
+                        stocksInfoFetch(dispatch, investments, symbol)
+                        break
+                    default:
+                }
+            })
+    }
+}
+
 // Get all Stocks, ETFs, Bonds, Mutual Funds, or Cryptos from Firebase
-export const investmentFetch = (investmentType) => {
+export const investmentFetchAll = (investmentType) => {
     const { currentUser } = firebase.auth()
     return (dispatch) => {
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}`)
@@ -34,7 +59,7 @@ export const investmentFetch = (investmentType) => {
 const stocksInfoFetch = (dispatch, stocks, symbolsString) => {
     const { baseUrl, apiKey } = API.ALPHA_VANTAGE
     const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.batchStockQuotes}&symbols=${symbolsString}&apikey=${apiKey}`
-    console.log(url)
+    console.log('stocksInfoFetch url is:', url)
     axios.get(url)
         .then((response) => {
             const data = _.map(response.data['Stock Quotes'], (stockInfo) => {
@@ -45,13 +70,17 @@ const stocksInfoFetch = (dispatch, stocks, symbolsString) => {
                 }
             })
             const mergedData = mergeStockData(stocks, data)
-            investmentFetchSuccess(dispatch, INVESTMENT_STOCKS, mergedData)
+            if (stocks.length === 1) {
+                investmentFetchSuccess(dispatch, INVESTMENT_FETCH_SUCCESS, INVESTMENT_STOCKS, mergedData[0])
+            } else {
+                investmentFetchSuccess(dispatch, INVESTMENT_FETCH_ALL_SUCCESS, INVESTMENT_STOCKS, mergedData)
+            }
         })
 }
 
-const investmentFetchSuccess = (dispatch, investmentType, value) => {
+const investmentFetchSuccess = (dispatch, type, investmentType, value) => {
     dispatch({
-        type: INVESTMENT_FETCH_SUCCESS,
+        type,
         payload: { 
             investmentType, 
             value 

@@ -11,6 +11,7 @@ class WelcomeScreen extends Component {
 
     // USE ONLY FOR TESTING
     componentWillMount() {
+        console.log('welcome screen props', this.props)
         this.props.loginUser({ email: 'a@a.com', password: 'aaaaaa' })
     }
 

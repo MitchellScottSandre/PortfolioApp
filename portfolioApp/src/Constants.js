@@ -11,7 +11,13 @@ const API = {
         }
     },
     SYMBOL_SEARCH: {
-        baseUrl: 'http://d.yimg.com/aq/autoc?region=US&lang=en&query='
+        baseUrl: 'http://d.yimg.com/aq/autoc?region=US&lang=en&query=',
+        types: {
+            currency: 'C',
+            stock: 'S',
+            etf: 'E',
+            option: 'O'
+        }
     }
 }
 

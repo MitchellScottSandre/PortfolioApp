@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, ScrollView, Dimensions } from 'react-native'
-import SmartCard from '../common/SmartCard'
+// import SmartCard from '../common/SmartCard'
 
 const { width } = Dimensions.get('window')
 
