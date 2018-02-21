@@ -9,8 +9,9 @@ import {
     INVESTMENT_STOCKS
 } from './types'
 
-export const investmentAdd = (investmentType, name, symbol) => {
-    console.log('addInvestment', investmentType, name, symbol)
+export const investmentAdd = (investmentType, stock) => {
+    console.log('addInvestment', investmentType, stock)
+    const { name, symbol, exchange, price, amount } = stock
     const { currentUser } = firebase.auth()
 
     return (dispatch) => {
@@ -18,13 +19,16 @@ export const investmentAdd = (investmentType, name, symbol) => {
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}/${symbol}`)
             .set({
                 name,
-                symbol
+                symbol,
+                amount, 
+                averagePrice: price,
+                exchange
             })
             .then(() => {
                 let investments = null
                 switch (investmentType) {
                     case INVESTMENT_STOCKS: 
-                        investments = [{ name, symbol }]
+                        investments = [{ name, symbol, exchange }]
                         stocksInfoFetch(dispatch, investments, symbol)
                         break
                     default:
@@ -57,6 +61,8 @@ export const investmentFetchAll = (investmentType) => {
 
 // API call to get all financial info
 const stocksInfoFetch = (dispatch, stocks, symbolsString) => {
+    if (symbolsString.length === 0) return
+
     const { baseUrl, apiKey } = API.ALPHA_VANTAGE
     const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.batchStockQuotes}&symbols=${symbolsString}&apikey=${apiKey}`
     console.log('stocksInfoFetch url is:', url)
@@ -66,7 +72,7 @@ const stocksInfoFetch = (dispatch, stocks, symbolsString) => {
                 return {
                     symbol: stockInfo['1. symbol'],
                     price: stockInfo['2. price'],
-                    volume: stockInfo['3. volume']
+                    // volume: stockInfo['3. volume']
                 }
             })
             const mergedData = mergeStockData(stocks, data)

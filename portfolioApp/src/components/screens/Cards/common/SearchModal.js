@@ -5,15 +5,17 @@ import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import { searchFieldTextChange } from '../../../../actions/SearchActions'
 import SearchResultListItem from './SearchResultListItem'
+import QuantityModal from './QuantityModal'
 
 class SearchModal extends Component {
 
-    // constructor(props) {
-    //     super(props)
-    //     this.state = {
-    //         isVisible: true
-    //     }
-    // }
+    constructor(props) {
+        super(props)
+        this.state = {
+            showExtraModal: false,
+            selectedResult: null
+        }
+    }
 
     _onChangeText(text) {
         this.props.searchFieldTextChange(this.props.searchType, text)
@@ -25,7 +27,15 @@ class SearchModal extends Component {
 
     _renderResults() {
         return this.props.searchResults.map((item, index) => 
-            <SearchResultListItem key={index} info={item} onPress={() => this.props.onSearchResultPress(item)} />
+            <SearchResultListItem 
+                key={index} 
+                info={item} 
+                onPress={() => this.setState({ 
+                    showExtraModal: true,
+                    selectedResult: item
+                })}
+                // onPress={() => this.props.onSearchResultPress(item)} 
+            />
         )
     }
 
@@ -34,13 +44,29 @@ class SearchModal extends Component {
         this.props.parentDismissModal()
     }
 
+    _dismissQuantityModal() {
+        this.setState({ 
+            showExtraModal: false,
+            selectedResult: null
+        })
+    }
+
     render() {
         const { searchFieldText, isVisible } = this.props
-        const { containerStyle, modalStyle, modalContentContainerStyle } = styles
+        const { modalStyle, modalContentContainerStyle } = styles
 
         return (
-            <View style={containerStyle}>
-                <Modal isVisible={isVisible} style={modalStyle} onBackdropPress={this._dismissModal.bind(this)}>
+            <View >
+                <Modal 
+                    animationIn='slideInUp'
+                    animationOut='slideOutUp'
+                    isVisible={isVisible} 
+                    style={modalStyle} 
+                    onBackdropPress={this._dismissModal.bind(this)}
+                    onSwipe={this._dismissModal.bind(this)}
+                    swipeDirection="up"
+                    swipeThreshold={100}
+                >
                     <View style={modalContentContainerStyle}>
                         <SearchBar
                             showLoading
@@ -59,6 +85,16 @@ class SearchModal extends Component {
                             </ScrollView>
                         </View>
                     </View>
+                    
+                    <QuantityModal 
+                        item={this.state.selectedResult}
+                        isVisible={this.state.showExtraModal} 
+                        parentDismissModal={this._dismissQuantityModal.bind(this)} 
+                        buttonSubmitText='ADD'
+                        onSubmitPress={this.props.onSearchResultAdd.bind(this)}
+                        showExtraButton
+                        extraButtonText='JUST WATCHING'
+                    />
                 </Modal>
             </View>
         )
@@ -66,11 +102,9 @@ class SearchModal extends Component {
 }
 
 const styles = {
-    containerStyle: {
-
-    },
     modalStyle: {
         margin: 30,
+        marginBottom: 60,
         padding: 20, 
         backgroundColor: 'white',
         borderRadius: 20

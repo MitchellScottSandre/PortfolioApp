@@ -1,0 +1,12 @@
+investment list item
+    price
+    averagePrice
+    symbol
+    name
+    exch (acronym, shorter)
+    change
+
+    firebase: symbol, name
+    alpha vantage: price (change)
+    d.yimg: exchange
+

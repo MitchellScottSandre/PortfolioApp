@@ -22,9 +22,10 @@ class StockCard extends Component {
         this.setState({ showSearchModal: true })
     }
 
-    _onSearchResultPress(stock) {
-        const { name, symbol } = stock
-        this.props.investmentAdd(INVESTMENT_STOCKS, name, symbol)
+    _onSearchResultAdd(stock, additionalInfo) {
+        const { name, symbol, exch: exchange } = stock
+        const { price, amount } = additionalInfo
+        this.props.investmentAdd(INVESTMENT_STOCKS, { name, symbol, exchange, price, amount })
     }
 
     render() {
@@ -32,16 +33,12 @@ class StockCard extends Component {
 
         return (
             <View>
-                { this.state.showSearchModal ? 
-                    <SearchModal 
-                        isVisible={this.state.showSearchModal} 
-                        searchType={SEARCH_STOCKS} 
-                        parentDismissModal={() => this.setState({ showSearchModal: false })} 
-                        onSearchResultPress={this._onSearchResultPress.bind(this)}
-                    /> 
-                : 
-                    null
-                }
+                <SearchModal 
+                    isVisible={this.state.showSearchModal} 
+                    searchType={SEARCH_STOCKS} 
+                    parentDismissModal={() => this.setState({ showSearchModal: false })} 
+                    onSearchResultAdd={this._onSearchResultAdd.bind(this)}
+                /> 
                 <InvestmentCard title='Stocks' data={stocks} onPlusButtonPress={() => this._showAddStockModal()} />
             </View>
         )

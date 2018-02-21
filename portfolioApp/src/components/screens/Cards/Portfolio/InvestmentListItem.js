@@ -3,13 +3,13 @@ import { View, Text, TouchableOpacity } from 'react-native'
 
 const InvestmentListItem = (props) => {
     // console.log('investment list item: props.info', props.info)
-    const { name, symbol, price, change, volume } = props.info
+    const { name, symbol, averagePrice, change, amount, price, exchange } = props.info
     const { cellContainerStyle } = styles
     // onpress
     return (
         <TouchableOpacity>
             <View style={cellContainerStyle}>
-                <Text>{name} {symbol} {price}</Text>
+                <Text>{name} | {symbol} | {price} | {averagePrice} | {amount} | {change} | {exchange}</Text>
             </View>
         </TouchableOpacity>
     )

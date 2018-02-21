@@ -4347,12 +4347,6 @@ react-native-navigation@^1.1.375:
   dependencies:
     lodash "4.x.x"
 
-react-native-search-box@^0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/react-native-search-box/-/react-native-search-box-0.0.13.tgz#75b5d21ecfb5d5dc12e26fac85b1225b48070f90"
-  dependencies:
-    prop-types "^15.5.10"
-
 react-native-vector-icons@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.5.0.tgz#6b95619e64f62f05f579f74a01fe5640df95158b"

@@ -6,6 +6,7 @@ import InvestmentListItem from './InvestmentListItem'
 // import { connect } from 'react-redux'
 
 // 1 day, 1 week, 1 month, 3 month, 6 month, 1 year, 2 year, max GRAPH
+// header: include TOTOAL AMOUNT
 // itemsList
 // graph
 class InvestmentCard extends Component {
