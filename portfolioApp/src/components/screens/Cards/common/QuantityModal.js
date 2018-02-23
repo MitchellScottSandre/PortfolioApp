@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import Modal from 'react-native-modal'
 import { Button, FormLabel, FormInput } from 'react-native-elements'
-// import { connect } from 'react-redux'
-// import { searchFieldTextChange } from '../../../../actions/SearchActions'
 
+/*
+    TODO
+    
+*/
 class QuantityModal extends Component {
 
     constructor(props) {
@@ -139,12 +141,4 @@ const styles = {
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         // searchFieldText: state.search.searchFieldText, 
-//         // searchResults: state.search.searchResults
-//     }
-// }
-
-// export default connect(mapStateToProps, { searchFieldTextChange })(SearchModal)
 export default QuantityModal

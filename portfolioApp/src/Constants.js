@@ -7,7 +7,8 @@ const API = {
         apiKey: '953M8HIRXV2KVV52', 
         baseUrl: 'https://www.alphavantage.co/query?',
         functions: {
-            batchStockQuotes: 'BATCH_STOCK_QUOTES'
+            batchStockQuotes: 'BATCH_STOCK_QUOTES',
+            timeSeriesDaily: 'TIME_SERIES_DAILY'
         }
     },
     SYMBOL_SEARCH: {

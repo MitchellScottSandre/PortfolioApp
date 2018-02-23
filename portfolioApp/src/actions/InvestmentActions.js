@@ -6,7 +6,9 @@ import { jsonToArray, mergeDataSetsByKeys } from '../utils/functions'
 import {
     INVESTMENT_FETCH_SUCCESS,
     INVESTMENT_FETCH_ALL_SUCCESS,
-    INVESTMENT_STOCKS
+    INVESTMENT_STOCKS,
+    INVESTMENT_UPDATE_TOTALS,
+    INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS
 } from './types'
 
 export const investmentAdd = (investmentType, stock) => {
@@ -30,6 +32,7 @@ export const investmentAdd = (investmentType, stock) => {
                     case INVESTMENT_STOCKS: 
                         investments = [{ name, symbol, exchange }]
                         stocksInfoFetch(dispatch, investments, symbol)
+                        investmentGetPreviousClose(dispatch, investmentType, symbol)
                         break
                     default:
                 }
@@ -57,6 +60,32 @@ export const investmentFetchAll = (investmentType) => {
             }
         })
     }
+}
+
+export const investmentGetPreviousClose = (dispatch, investmentType, symbol) => {
+    if (symbol.length === 0) return
+    console.log('investmentGetPreviousClose')
+    const { baseUrl, apiKey } = API.ALPHA_VANTAGE  
+    const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.timeSeriesDaily}&symbol=${symbol}&apikey=${apiKey}`
+    console.log('investmentGetPreviousClose url is:', url)
+    axios.get(url)
+        .then((response) => {
+            const data = response.data
+            console.log(data)
+            const closeDate = Object.keys(data['Time Series (Daily)'])[0]
+            const closePrice = data['Time Series (Daily)'][closeDate]['4. close']
+            console.log('dispatching...', data, closeDate, closePrice)
+            dispatch({
+                type: INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS,
+                payload: {
+                    investmentType,
+                    symbol,
+                    closeDate,
+                    closePrice
+                }
+            })  
+        })
+    
 }
 
 // API call to get all financial info
@@ -92,6 +121,17 @@ const investmentFetchSuccess = (dispatch, type, investmentType, value) => {
             value 
         }
     })
+}
+
+export const investmentUpdateTotals = ({ investmentType, totalBookValue, totalMarketValue }) => {
+    return {
+        type: INVESTMENT_UPDATE_TOTALS,
+        payload: {
+            investmentType,
+            totalBookValue,
+            totalMarketValue
+        }
+    }
 }
 
 // Helper Functions

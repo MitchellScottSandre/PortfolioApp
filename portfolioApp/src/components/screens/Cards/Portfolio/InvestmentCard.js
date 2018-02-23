@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from 'react-native'
 import { Header } from 'react-native-elements'
 import SmartCard from '../common/SmartCard'
 import InvestmentListItem from './InvestmentListItem'
+import InvestmentSummary from './InvestmentSummary'
 // import { connect } from 'react-redux'
 
 // 1 day, 1 week, 1 month, 3 month, 6 month, 1 year, 2 year, max GRAPH
@@ -18,7 +19,7 @@ class InvestmentCard extends Component {
     }
     
     render() {
-        const { onPlusButtonPress } = this.props
+        const { onPlusButtonPress, data, investmentType } = this.props
         const { graphViewStyle } = styles
 
         return (
@@ -30,6 +31,8 @@ class InvestmentCard extends Component {
                         outerContainerStyles={{ height: 40, paddingLeft: 15, paddingRight: 15, paddingBottom: 0, paddingTop: 0, marginBottom: 20 }}
                         innerContainerStyles={{ alignItems: 'center' }}
                     />
+
+                    <InvestmentSummary data={data} investmentType={investmentType} />
 
                     <ScrollView>
                         {this._renderData()}

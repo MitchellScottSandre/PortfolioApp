@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
+import _ from 'lodash'
 import { connect } from 'react-redux'
 import { investmentFetchAll, investmentAdd } from '../../../../actions/InvestmentActions'
 import { INVESTMENT_STOCKS, SEARCH_STOCKS } from '../../../../actions/types'
@@ -39,7 +40,7 @@ class StockCard extends Component {
                     parentDismissModal={() => this.setState({ showSearchModal: false })} 
                     onSearchResultAdd={this._onSearchResultAdd.bind(this)}
                 /> 
-                <InvestmentCard title='Stocks' data={stocks} onPlusButtonPress={() => this._showAddStockModal()} />
+                <InvestmentCard title='Stocks' data={stocks} onPlusButtonPress={() => this._showAddStockModal()} investmentType='stocks' />
             </View>
         )
     }
@@ -47,7 +48,7 @@ class StockCard extends Component {
 
 const mapStateToProps = state => {
     return {
-        stocks: state.investments.stocks, 
+        stocks: state.investments.stocks,
         lastStockDataFetchTime: state.investments.lastStockDataFetchTime
     }
 }

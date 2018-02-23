@@ -19,7 +19,7 @@ const styles = {
     cellContainerStyle: {
         height: 40,
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row' 
     }
 }
 
