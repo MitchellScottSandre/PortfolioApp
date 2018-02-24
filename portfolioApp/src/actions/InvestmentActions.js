@@ -85,7 +85,6 @@ export const investmentGetPreviousClose = (dispatch, investmentType, symbol) => 
                 }
             })  
         })
-    
 }
 
 // API call to get all financial info

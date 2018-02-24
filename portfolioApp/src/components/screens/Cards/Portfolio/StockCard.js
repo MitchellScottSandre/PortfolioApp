@@ -47,8 +47,10 @@ class StockCard extends Component {
 }
 
 const mapStateToProps = state => {
+    let a = _.map(state.investments.stocks, (stock) => { return stock })
+    console.log('a is:', a)
     return {
-        stocks: state.investments.stocks,
+        stocks: _.map(state.investments.stocks, (stock) => { return stock }),
         lastStockDataFetchTime: state.investments.lastStockDataFetchTime
     }
 }
