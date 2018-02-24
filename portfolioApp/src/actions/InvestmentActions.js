@@ -2,9 +2,9 @@ import firebase from 'firebase'
 import _ from 'lodash'
 import axios from 'axios'
 import { API } from '../Constants'
-import { jsonToArray, mergeDataSetsByKeys } from '../utils/functions'
+import { jsonToArray, mergeDataSetsByKeys, isLastCloseDate } from '../utils/functions'
 import {
-    INVESTMENT_FETCH_SUCCESS,
+    INVESTMENT_FETCH_PRICE_SUCCESS,
     INVESTMENT_FETCH_ALL_SUCCESS,
     INVESTMENT_STOCKS,
     INVESTMENT_UPDATE_TOTALS,
@@ -30,18 +30,19 @@ export const investmentAdd = (investmentType, stock) => {
                 let investments = null
                 switch (investmentType) {
                     case INVESTMENT_STOCKS: 
-                        investments = [{ name, symbol, exchange }]
-                        stocksInfoFetch(dispatch, investments, symbol)
-                        investmentGetPreviousClose(dispatch, investmentType, symbol)
+                        investments = [{ name, symbol, exchange, price, amount, averagePrice: price }]
+                        stocksPriceFetch(dispatch, investments, symbol)
                         break
                     default:
                 }
+                // console.log('called stocks info fetch: data is: ', data)
             })
     }
 }
 
 // Get all Stocks, ETFs, Bonds, Mutual Funds, or Cryptos from Firebase
 export const investmentFetchAll = (investmentType) => {
+    console.log('investmentFetchAll!!!')
     const { currentUser } = firebase.auth()
     return (dispatch) => {
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}`)
@@ -54,7 +55,12 @@ export const investmentFetchAll = (investmentType) => {
 
             switch (investmentType) {
                 case INVESTMENT_STOCKS: 
-                    stocksInfoFetch(dispatch, val, symbolsString)
+                    stocksPriceFetch(dispatch, val, symbolsString)
+                    _.forEach(val, (stock) => {
+                        if (!stock.hasOwnProperty('closeDate') || !isLastCloseDate(stock.closeDate)) {
+                            investmentPreviousCloseFetch(dispatch, 'stocks', stock.symbol)
+                        }
+                    })
                     break
                 default:
             }
@@ -62,19 +68,19 @@ export const investmentFetchAll = (investmentType) => {
     }
 }
 
-export const investmentGetPreviousClose = (dispatch, investmentType, symbol) => {
+export const investmentPreviousCloseFetch = (dispatch, investmentType, symbol) => {
     if (symbol.length === 0) return
-    console.log('investmentGetPreviousClose')
+    // console.log('investmentGetPreviousClose')
     const { baseUrl, apiKey } = API.ALPHA_VANTAGE  
     const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.timeSeriesDaily}&symbol=${symbol}&apikey=${apiKey}`
     console.log('investmentGetPreviousClose url is:', url)
     axios.get(url)
         .then((response) => {
             const data = response.data
-            console.log(data)
+            // console.log(data)
             const closeDate = Object.keys(data['Time Series (Daily)'])[0]
             const closePrice = data['Time Series (Daily)'][closeDate]['4. close']
-            console.log('dispatching...', data, closeDate, closePrice)
+            // console.log('dispatching...', data, closeDate, closePrice)
             dispatch({
                 type: INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS,
                 payload: {
@@ -88,27 +94,34 @@ export const investmentGetPreviousClose = (dispatch, investmentType, symbol) => 
 }
 
 // API call to get all financial info
-const stocksInfoFetch = (dispatch, stocks, symbolsString) => {
+const stocksPriceFetch = (dispatch, stocks, symbolsString) => {
     if (symbolsString.length === 0) return
-
+    console.log('stocks price fetch: symbols:', symbolsString)
     const { baseUrl, apiKey } = API.ALPHA_VANTAGE
     const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.batchStockQuotes}&symbols=${symbolsString}&apikey=${apiKey}`
     console.log('stocksInfoFetch url is:', url)
     axios.get(url)
         .then((response) => {
-            const data = _.map(response.data['Stock Quotes'], (stockInfo) => {
+            const priceData = _.map(response.data['Stock Quotes'], (stockInfo) => {
                 return {
                     symbol: stockInfo['1. symbol'],
                     price: stockInfo['2. price'],
                     // volume: stockInfo['3. volume']
                 }
             })
-            const mergedData = mergeStockData(stocks, data)
-            if (stocks.length === 1) {
-                investmentFetchSuccess(dispatch, INVESTMENT_FETCH_SUCCESS, INVESTMENT_STOCKS, mergedData[0])
-            } else {
-                investmentFetchSuccess(dispatch, INVESTMENT_FETCH_ALL_SUCCESS, INVESTMENT_STOCKS, mergedData)
-            }
+
+            const mergedData = mergeStockData(stocks, priceData)
+
+            _.forEach(mergedData, (stock) => {
+                investmentFetchSuccess(dispatch, INVESTMENT_FETCH_PRICE_SUCCESS, INVESTMENT_STOCKS, stock)
+            })
+            
+            // if (stocks.length === 1) {
+            //     investmentFetchSuccess(dispatch, INVESTMENT_FETCH_PRICE_SUCCESS, INVESTMENT_STOCKS, mergedData[0])
+            // } else {
+            //     console.log('merged data is:', mergedData)
+            //     investmentFetchSuccess(dispatch, INVESTMENT_FETCH_ALL_SUCCESS, INVESTMENT_STOCKS, mergedData)
+            // }
         })
 }
 

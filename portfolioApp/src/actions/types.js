@@ -13,10 +13,11 @@ export const AUTHORIZATION_FAIL = 'authorization_fail'
 // Investment Types
 export const INVESTMENT_STOCKS = 'stocks'
 
-export const INVESTMENT_FETCH_SUCCESS = 'investment_fetch_success'
+export const INVESTMENT_FETCH_PRICE_SUCCESS = 'investment_fetch_price_success'
+export const INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS = 'investment_fetch_close_price_success'
+
 export const INVESTMENT_FETCH_ALL_SUCCESS = 'investment_fetch_all_success'
 export const INVESTMENT_ADD_SUCCESS = 'investment_add_success'
-export const INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS = 'investment_fetch_close_price_success'
 
 export const INVESTMENT_UPDATE_TOTALS = 'investment_update_totals'
 

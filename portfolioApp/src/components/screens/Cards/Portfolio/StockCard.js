@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { investmentFetchAll, investmentAdd } from '../../../../actions/InvestmentActions'
+import { investmentAdd } from '../../../../actions/InvestmentActions'
 import { INVESTMENT_STOCKS, SEARCH_STOCKS } from '../../../../actions/types'
 import InvestmentCard from './InvestmentCard'
 import SearchModal from '../common/SearchModal'
@@ -16,7 +16,8 @@ class StockCard extends Component {
         }
     }
     componentWillMount() {
-        this.props.investmentFetchAll(INVESTMENT_STOCKS)
+        console.log('stock card component will mount...')
+        // this.props.investmentFetchAll(INVESTMENT_STOCKS)
     }
 
     _showAddStockModal() {
@@ -26,6 +27,7 @@ class StockCard extends Component {
     _onSearchResultAdd(stock, additionalInfo) {
         const { name, symbol, exch: exchange } = stock
         const { price, amount } = additionalInfo
+        console.log('stock card _onSearchResultAdd', price, amount)
         this.props.investmentAdd(INVESTMENT_STOCKS, { name, symbol, exchange, price, amount })
     }
 
@@ -47,6 +49,7 @@ class StockCard extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log('investments is:', state.investments)
     let a = _.map(state.investments.stocks, (stock) => { return stock })
     console.log('a is:', a)
     return {
@@ -55,4 +58,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, { investmentFetchAll, investmentAdd })(StockCard)
+export default connect(mapStateToProps, { investmentAdd })(StockCard)

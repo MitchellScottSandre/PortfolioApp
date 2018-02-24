@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import CardScreen from '../common/CardScreen'
 import StockCard from './StockCard'
+import { INVESTMENT_STOCKS } from '../../../../actions/types'
+import { investmentFetchAll } from '../../../../actions/InvestmentActions'
 // import { loginUser } from '../../../../actions/AuthenticationActions'
 
 // const cards = [
@@ -12,6 +14,11 @@ import StockCard from './StockCard'
 class PortfolioScreen extends Component {
     static navigatorStyle = {
         navBarHidden: true
+    }
+
+    componentWillMount() {
+        console.log('portfolio screen component will mount, calling investment fetch all')
+        this.props.investmentFetchAll(INVESTMENT_STOCKS)
     }
 
     _getCards() {
@@ -30,4 +37,4 @@ class PortfolioScreen extends Component {
 }
 
 
-export default connect(null, { })(PortfolioScreen)
+export default connect(null, { investmentFetchAll })(PortfolioScreen)

@@ -33,7 +33,7 @@ class InvestmentSummary extends Component {
             totalBookValue: numeral(totalBookValue).format('$0,0.00'),
             totalMarketValue: numeral(totalMarketValue).format('$0,0.00'),
             dollarChange: numeral(totalMarketValue - totalBookValue).format('$0,0.00'),
-            percentChange: numeral(totalMarketValue / totalBookValue).format('0.00%')
+            percentChange: numeral((totalMarketValue / totalBookValue) - 1).format('0.00%')
         })
         // props.investmentUpdateTotals({ investmentType, totalBookValue, totalMarketValue })
     }
@@ -42,7 +42,7 @@ class InvestmentSummary extends Component {
         return (
             <View>
                 {/* <Text> */}
-                <Text>{this.state.totalMarketValue} | {this.state.totalBookValue} | {this.state.dollarChange} | {this.state.percentChange}%</Text>
+                <Text>{this.state.totalMarketValue} | {this.state.totalBookValue} | {this.state.dollarChange} | {this.state.percentChange}</Text>
             </View>
         )
     }

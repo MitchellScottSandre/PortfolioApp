@@ -18,9 +18,16 @@ export const mergeDataSetsByKeys = (dataSet1, dataSet2, key1, key2) => {
     })
 }
 
-// export const addDataToUniqueArray = (dataSet, newEntry) => {
-//     console.log(dataSet)
-//     console.log(newEntry)
-//     console.log(_.includes(dataSet, newEntry))
-//     return _.includes(dataSet, newEntry) ? dataSet : [...dataSet, ...newEntry]
-// }
+export const isLastCloseDate = (dayString) => {
+    const todayNum = new Date().getDay()
+    let lastCloseDate = new Date()
+    if (todayNum === 0 || todayNum === 1 || todayNum === 6) { // Sunday, Monday, Saturday -> return Friday's date
+        while (lastCloseDate.getDay() !== 5) {
+            lastCloseDate.setDate(lastCloseDate.getDate() - 1)
+        }    
+    } else { // return yesterday's date
+        lastCloseDate.setDate(lastCloseDate.getDate() - 1)
+    }
+    return dayString === lastCloseDate.toJSON().slice(0, 10).replace(/-/g, '-')
+}
+
