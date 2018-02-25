@@ -1,4 +1,5 @@
 import { 
+    INVESTMENT_ADD_SUCCESS,
     INVESTMENT_FETCH_PRICE_SUCCESS,
     INVESTMENT_FETCH_ALL_SUCCESS, 
     INVESTMENT_UPDATE_TOTALS,
@@ -8,7 +9,7 @@ import {
 
 const INITIAL_STATE = {
     lastStockDataFetchTime: 0,
-    // stocks: [], 
+    symbols: [],
     stocks: {}, 
     totals: {}                
 }
@@ -16,6 +17,19 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     
     switch (action.type) {
+        case INVESTMENT_ADD_SUCCESS:
+            console.log('investment add success:', action.payload)
+            return {
+                ...state,
+                [action.payload.investmentType]: {
+                    ...state[action.payload.investmentType],
+                    [action.payload.value.symbol]: {
+                        ...state[action.payload.investmentType][action.payload.value.symbol],
+                        ...action.payload.value
+                    }
+                },
+                symbols: [...state.symbols, action.payload.value.symbol]
+            }
         case INVESTMENT_FETCH_PRICE_SUCCESS:
             console.log('investment fetch price success:', action.payload)
             return {

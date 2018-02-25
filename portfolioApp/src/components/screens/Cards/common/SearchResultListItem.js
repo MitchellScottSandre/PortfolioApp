@@ -3,13 +3,14 @@ import { View, Text, TouchableOpacity } from 'react-native'
 
 const SearchResultListItem = (props) => {
     // console.log('SearchResultListItem: props.info', props.info)
-    const { onPress, info } = props
+    const { onPress, info, alreadyOwned } = props
     const { name, symbol } = info
     const { cellContainerStyle } = styles
-   
+    const backgroundColor = alreadyOwned ? '#FFDDFFDD' : 'white'
+
     return (
         <TouchableOpacity onPress={onPress}>
-            <View style={cellContainerStyle}>
+            <View style={[cellContainerStyle, { backgroundColor }]}>
                 <Text>{name} {symbol} </Text>
             </View>
         </TouchableOpacity>

@@ -4,6 +4,7 @@ import axios from 'axios'
 import { API } from '../Constants'
 import { jsonToArray, mergeDataSetsByKeys, isLastCloseDate } from '../utils/functions'
 import {
+    INVESTMENT_ADD_SUCCESS, 
     INVESTMENT_FETCH_PRICE_SUCCESS,
     INVESTMENT_FETCH_ALL_SUCCESS,
     INVESTMENT_STOCKS,
@@ -31,7 +32,8 @@ export const investmentAdd = (investmentType, stock) => {
                 switch (investmentType) {
                     case INVESTMENT_STOCKS: 
                         investments = [{ name, symbol, exchange, price, amount, averagePrice: price }]
-                        stocksPriceFetch(dispatch, investments, symbol)
+                        stocksPriceFetch(dispatch, investments, symbol, INVESTMENT_ADD_SUCCESS)
+                        investmentPreviousCloseFetch(dispatch, investmentType, symbol)
                         break
                     default:
                 }
@@ -46,7 +48,7 @@ export const investmentFetchAll = (investmentType) => {
     const { currentUser } = firebase.auth()
     return (dispatch) => {
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}`)
-        .on('value', snapshot => {
+        .once('value', snapshot => {
             const val = snapshot.val()                                  // snapshot.val() is JSON of investments names/symbols
             const symbols = _.map(snapshot.val(), (investment) => {
                 return investment.symbol
@@ -94,12 +96,13 @@ export const investmentPreviousCloseFetch = (dispatch, investmentType, symbol) =
 }
 
 // API call to get all financial info
-const stocksPriceFetch = (dispatch, stocks, symbolsString) => {
+const stocksPriceFetch = (dispatch, stocks, symbolsString, type) => {
     if (symbolsString.length === 0) return
     console.log('stocks price fetch: symbols:', symbolsString)
     const { baseUrl, apiKey } = API.ALPHA_VANTAGE
     const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.batchStockQuotes}&symbols=${symbolsString}&apikey=${apiKey}`
     console.log('stocksInfoFetch url is:', url)
+    const actionType = !!type ? type : INVESTMENT_FETCH_PRICE_SUCCESS
     axios.get(url)
         .then((response) => {
             const priceData = _.map(response.data['Stock Quotes'], (stockInfo) => {
@@ -113,15 +116,8 @@ const stocksPriceFetch = (dispatch, stocks, symbolsString) => {
             const mergedData = mergeStockData(stocks, priceData)
 
             _.forEach(mergedData, (stock) => {
-                investmentFetchSuccess(dispatch, INVESTMENT_FETCH_PRICE_SUCCESS, INVESTMENT_STOCKS, stock)
+                investmentFetchSuccess(dispatch, actionType, INVESTMENT_STOCKS, stock)
             })
-            
-            // if (stocks.length === 1) {
-            //     investmentFetchSuccess(dispatch, INVESTMENT_FETCH_PRICE_SUCCESS, INVESTMENT_STOCKS, mergedData[0])
-            // } else {
-            //     console.log('merged data is:', mergedData)
-            //     investmentFetchSuccess(dispatch, INVESTMENT_FETCH_ALL_SUCCESS, INVESTMENT_STOCKS, mergedData)
-            // }
         })
 }
 

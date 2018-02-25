@@ -26,6 +26,8 @@ class SearchModal extends Component {
     }
 
     _renderResults() {
+        const { symbols } = this.props
+        console.log('search modal: symbols', symbols)
         return this.props.searchResults.map((item, index) => 
             <SearchResultListItem 
                 key={index} 
@@ -34,7 +36,7 @@ class SearchModal extends Component {
                     showExtraModal: true,
                     selectedResult: item
                 })}
-                // onPress={() => this.props.onSearchResultPress(item)} 
+                alreadyOwned={symbols.indexOf(item.symbol) !== -1}
             />
         )
     }
@@ -117,7 +119,8 @@ const styles = {
 const mapStateToProps = state => {
     return {
         searchFieldText: state.search.searchFieldText, 
-        searchResults: state.search.searchResults
+        searchResults: state.search.searchResults,
+        symbols: state.investments.symbols
     }
 }
 
