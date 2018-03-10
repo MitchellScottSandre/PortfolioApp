@@ -9,7 +9,7 @@ import {
     INVESTMENT_FETCH_ALL_SUCCESS,
     INVESTMENT_STOCKS,
     INVESTMENT_UPDATE_TOTALS,
-    INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS
+    // INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS
 } from './types'
 
 export const investmentAdd = (investmentType, stock) => {
@@ -28,12 +28,10 @@ export const investmentAdd = (investmentType, stock) => {
                 exchange
             })
             .then(() => {
-                let investments = null
+                const investmentInfo = { name, exchange, amount, averagePrice: price }
                 switch (investmentType) {
                     case INVESTMENT_STOCKS: 
-                        investments = [{ name, symbol, exchange, price, amount, averagePrice: price }]
-                        stocksPriceFetch(dispatch, investments, symbol, INVESTMENT_ADD_SUCCESS)
-                        investmentPreviousCloseFetch(dispatch, investmentType, symbol)
+                        stockFetch(dispatch, symbol, investmentInfo)
                         break
                     default:
                 }
@@ -49,20 +47,15 @@ export const investmentFetchAll = (investmentType) => {
     return (dispatch) => {
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}`)
         .once('value', snapshot => {
-            const val = snapshot.val()                                  // snapshot.val() is JSON of investments names/symbols
-            const symbols = _.map(snapshot.val(), (investment) => {
+            const investments = snapshot.val()                                  
+            const symbols = _.map(investments, (investment) => {
                 return investment.symbol
             })
-            const symbolsString = _.join(symbols, ',')                  // array -> comma separated list
+            const symbolsString = _.join(symbols, ',')                  
 
             switch (investmentType) {
                 case INVESTMENT_STOCKS: 
-                    stocksPriceFetch(dispatch, val, symbolsString)
-                    _.forEach(val, (stock) => {
-                        if (!stock.hasOwnProperty('closeDate') || !isLastCloseDate(stock.closeDate)) {
-                            investmentPreviousCloseFetch(dispatch, 'stocks', stock.symbol)
-                        }
-                    })
+                    stockFetchAll(dispatch, symbolsString, investments)
                     break
                 default:
             }
@@ -70,66 +63,91 @@ export const investmentFetchAll = (investmentType) => {
     }
 }
 
-export const investmentPreviousCloseFetch = (dispatch, investmentType, symbol) => {
-    if (symbol.length === 0) return
-    // console.log('investmentGetPreviousClose')
-    const { baseUrl, apiKey } = API.ALPHA_VANTAGE  
-    const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.timeSeriesDaily}&symbol=${symbol}&apikey=${apiKey}`
-    console.log('investmentGetPreviousClose url is:', url)
-    axios.get(url)
-        .then((response) => {
-            const data = response.data
-            // console.log(data)
-            const closeDate = Object.keys(data['Time Series (Daily)'])[0]
-            const closePrice = data['Time Series (Daily)'][closeDate]['4. close']
-            // console.log('dispatching...', data, closeDate, closePrice)
-            dispatch({
-                type: INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS,
-                payload: {
-                    investmentType,
-                    symbol,
-                    closeDate,
-                    closePrice
-                }
-            })  
-        })
-}
-
-// API call to get all financial info
-const stocksPriceFetch = (dispatch, stocks, symbolsString, type) => {
+export const stockFetchAll = (dispatch, symbolsString, stocks) => {
     if (symbolsString.length === 0) return
-    console.log('stocks price fetch: symbols:', symbolsString)
-    const { baseUrl, apiKey } = API.ALPHA_VANTAGE
-    const url = `${baseUrl}function=${API.ALPHA_VANTAGE.functions.batchStockQuotes}&symbols=${symbolsString}&apikey=${apiKey}`
-    console.log('stocksInfoFetch url is:', url)
-    const actionType = !!type ? type : INVESTMENT_FETCH_PRICE_SUCCESS
+    const { baseUrl } = API.IEX_TRADING
+    let url = `${baseUrl}/stock/market/batch?symbols=${symbolsString}&types=quote`
     axios.get(url)
         .then((response) => {
-            const priceData = _.map(response.data['Stock Quotes'], (stockInfo) => {
-                return {
-                    symbol: stockInfo['1. symbol'],
-                    price: stockInfo['2. price'],
-                    // volume: stockInfo['3. volume']
-                }
-            })
+            const stocksInfo = response.data
+            _.forEach(stocksInfo, (stockInfo) => {
+                const { 
+                    symbol,
+                    change,
+                    changePercent, 
+                    latestPrice,
+                    close,
+                    closeTime,
+                    sector,
+                    latestTime
+                } = stockInfo.quote
 
-            const mergedData = mergeStockData(stocks, priceData)
-
-            _.forEach(mergedData, (stock) => {
-                investmentFetchSuccess(dispatch, actionType, INVESTMENT_STOCKS, stock)
+                dispatch({
+                    type: INVESTMENT_ADD_SUCCESS,
+                    payload: {
+                        investmentType: INVESTMENT_STOCKS,
+                        value: {
+                            change,
+                            changePercent,
+                            symbol,
+                            latestPrice,
+                            close,
+                            closeTime, 
+                            sector,
+                            latestTime,
+                            ...stocks[symbol]
+                        }
+                    }
+                })
             })
         })
 }
 
-const investmentFetchSuccess = (dispatch, type, investmentType, value) => {
-    dispatch({
-        type,
-        payload: { 
-            investmentType, 
-            value 
-        }
-    })
+export const stockFetch = (dispatch, symbol, investmentInfo) => {
+    if (symbol.length === 0) return
+    const { baseUrl } = API.IEX_TRADING
+    let url = `${baseUrl}/stock/${symbol}/book`
+    axios.get(url)
+        .then((response) => {
+            const { 
+                change,
+                changePercent, 
+                latestPrice,
+                close,
+                closeTime,
+                sector,
+                latestTime
+            } = response.data.quote
+
+            dispatch({
+                type: INVESTMENT_ADD_SUCCESS,
+                payload: {
+                    investmentType: INVESTMENT_STOCKS,
+                    value: {
+                        change,
+                        changePercent,
+                        symbol,
+                        latestPrice,
+                        close,
+                        closeTime, 
+                        sector,
+                        latestTime,
+                        ...investmentInfo
+                    }
+                }
+            })
+        })
 }
+
+// const investmentFetchSuccess = (dispatch, type, investmentType, value) => {
+//     dispatch({
+//         type,
+//         payload: { 
+//             investmentType, 
+//             value 
+//         }
+//     })
+// }
 
 export const investmentUpdateTotals = ({ investmentType, totalBookValue, totalMarketValue }) => {
     return {
@@ -142,11 +160,11 @@ export const investmentUpdateTotals = ({ investmentType, totalBookValue, totalMa
     }
 }
 
-// Helper Functions
+// // Helper Functions
 
-// stocks1 is from firebase (name, symbol)                  // JSON
-// stocks2 is from API request (contains financial info)    // ARRAY
-const mergeStockData = (stocks1, stocks2) => {
-    const newStocks1 = jsonToArray(stocks1)
-    return (mergeDataSetsByKeys(newStocks1, stocks2, 'symbol', 'symbol'))
-}
+// // stocks1 is from firebase (name, symbol)                  // JSON
+// // stocks2 is from API request (contains financial info)    // ARRAY
+// const mergeStockData = (stocks1, stocks2) => {
+//     const newStocks1 = jsonToArray(stocks1)
+//     return (mergeDataSetsByKeys(newStocks1, stocks2, 'symbol', 'symbol'))
+// }

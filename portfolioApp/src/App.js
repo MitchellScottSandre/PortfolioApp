@@ -2,6 +2,8 @@ import { Component } from 'react'
 import ReduxThunk from 'redux-thunk'
 import firebase from 'firebase'
 import { createStore, applyMiddleware } from 'redux'
+// import { persistStore, persistReducer } from 'redux-persist'
+// import storage from 'redux-persist/lib/storage'
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
 import reducer from './reducers'
@@ -11,6 +13,11 @@ import * as appActions from './actions'
 
 const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore)
 const store = createStoreWithMiddleware(reducer)
+// const persistConfig = {
+//     key: 'root',
+//     storage,
+//   }
+// const persistedReducer = persistReducer(persistConfig, reducer)
 
 registerScreens(store, Provider)
 

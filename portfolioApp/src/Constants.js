@@ -1,6 +1,15 @@
-// const SCREEN_NAMES = {
-//     welcome: 'welcome'
-// }
+const INVESTMENT_INFO = {
+    name: 'name',
+    symbol: 'symbol',
+    latestPrice: 'latestPrice',
+    averagePrice: 'averagePrice',
+    ammount: 'amount',
+    change: 'change',
+    close: 'close',
+    closeTime: 'closeTime',
+    exchange: 'exchange',
+    sector: 'sector'
+}
 
 const API = {
     ALPHA_VANTAGE: {
@@ -19,6 +28,9 @@ const API = {
             etf: 'E',
             option: 'O'
         }
+    },
+    IEX_TRADING: {
+        baseUrl: 'https://api.iextrading.com/1.0'
     }
 }
 
@@ -29,5 +41,6 @@ const CommonStyle = {
 export {
     // SCREEN_NAMES,
     API,
-    CommonStyle
+    CommonStyle,
+    INVESTMENT_INFO
 }
