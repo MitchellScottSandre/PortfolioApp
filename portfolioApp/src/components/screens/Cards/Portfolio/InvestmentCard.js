@@ -1,20 +1,23 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView } from 'react-native'
+import { connect } from 'react-redux'
+import { setSelectedItem } from '../../../../actions/CardActions'
+
 import { Header } from 'react-native-elements'
 import SmartCard from '../common/SmartCard'
 import InvestmentListItem from './InvestmentListItem'
 import InvestmentSummary from './InvestmentSummary'
-// import { connect } from 'react-redux'
+import Graph from '../../../graphing/Graph'
 
-// 1 day, 1 week, 1 month, 3 month, 6 month, 1 year, 2 year, max GRAPH
-// header: include TOTOAL AMOUNT
-// itemsList
-// graph
 class InvestmentCard extends Component {
 
     _renderData() {
         return this.props.data.map((item, index) => 
-            <InvestmentListItem key={index} info={item} />
+            <InvestmentListItem 
+                key={index} 
+                info={item} 
+                onPress={() => this.props.setSelectedItem(this.props.investmentType, item.symbol)}
+            />
         )
     }
     
@@ -38,9 +41,12 @@ class InvestmentCard extends Component {
                         {this._renderData()}
                     </ScrollView>
 
-                    <View style={graphViewStyle}>
+                    {/* <View style={graphViewStyle}>
                         <Text>GRAPH TODO</Text>
-                    </View>
+                    </View> */}
+                    <Graph 
+                        investmentType={investmentType}
+                    />
                 </View>
             </SmartCard>
         )
@@ -52,5 +58,14 @@ const styles = {
         height: 50
     }
 }
-//connect(null, {})
-export default InvestmentCard
+
+const mapStateToProps = state => {
+    console.log('investment card Card props from redux', state)
+
+    return {
+        cardData: state.cards
+    }
+}
+
+export default connect(mapStateToProps, { setSelectedItem })(InvestmentCard)
+

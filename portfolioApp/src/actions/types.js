@@ -27,3 +27,9 @@ export const SEARCH_FETCH_SUCCESS = 'search_fetch_success'
 
 export const SEARCH_ALL = 'search_all'
 export const SEARCH_STOCKS = 'search_stocks'
+
+// Graph Types
+export const STOCK_FETCH_BOOK = 'stock_fetch_book'
+
+// Card Types
+export const ITEM_SELECTED = 'cardItemSelected'

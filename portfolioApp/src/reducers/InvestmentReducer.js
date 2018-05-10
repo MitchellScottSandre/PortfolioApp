@@ -30,31 +30,6 @@ export default (state = INITIAL_STATE, action) => {
                 },
                 symbols: [...state.symbols, action.payload.value.symbol]
             }
-        // case INVESTMENT_FETCH_PRICE_SUCCESS:
-        //     console.log('investment fetch price success:', action.payload)
-        //     return {
-        //         ...state,
-        //         [action.payload.investmentType]: {
-        //             ...state[action.payload.investmentType],
-        //             [action.payload.value.symbol]: {
-        //                 ...state[action.payload.investmentType][action.payload.value.symbol],
-        //                 ...action.payload.value
-        //             }
-        //         }
-        //     }
-        // case INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS: 
-        //     console.log('investment fetch close price success', action.payload)
-        //     return {
-        //         ...state,
-        //         [action.payload.investmentType]: {
-        //             ...state[action.payload.investmentType],
-        //             [action.payload.symbol]: {
-        //                 ...state[action.payload.investmentType][action.payload.symbol],
-        //                 closeDate: action.payload.closeDate,
-        //                 closePrice: action.payload.closePrice
-        //             }
-        //         }
-        //     }
         case INVESTMENT_FETCH_ALL_SUCCESS: 
             return {
                 ...state,

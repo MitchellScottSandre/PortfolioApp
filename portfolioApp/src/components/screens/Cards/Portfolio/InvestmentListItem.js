@@ -8,7 +8,7 @@ const InvestmentListItem = (props) => {
     const { cellContainerStyle } = styles
     // onpress
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.onPress}>
             <View style={cellContainerStyle}>
                 <Text>
                     {name} | {symbol} | {latestPrice} | {averagePrice} | {amount} | {change} | {exchange} | {changePercent} | {latestTime} |
