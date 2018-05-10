@@ -139,16 +139,6 @@ export const stockFetch = (dispatch, symbol, investmentInfo) => {
         })
 }
 
-// const investmentFetchSuccess = (dispatch, type, investmentType, value) => {
-//     dispatch({
-//         type,
-//         payload: { 
-//             investmentType, 
-//             value 
-//         }
-//     })
-// }
-
 export const investmentUpdateTotals = ({ investmentType, totalBookValue, totalMarketValue }) => {
     return {
         type: INVESTMENT_UPDATE_TOTALS,
@@ -159,12 +149,3 @@ export const investmentUpdateTotals = ({ investmentType, totalBookValue, totalMa
         }
     }
 }
-
-// // Helper Functions
-
-// // stocks1 is from firebase (name, symbol)                  // JSON
-// // stocks2 is from API request (contains financial info)    // ARRAY
-// const mergeStockData = (stocks1, stocks2) => {
-//     const newStocks1 = jsonToArray(stocks1)
-//     return (mergeDataSetsByKeys(newStocks1, stocks2, 'symbol', 'symbol'))
-// }

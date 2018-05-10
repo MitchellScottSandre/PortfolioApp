@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import numeral from 'numeral'
 import { connect } from 'react-redux'
 import { investmentUpdateTotals } from '../../../../actions/InvestmentActions'
@@ -21,13 +21,14 @@ class InvestmentSummary extends Component {
     }
 
     _calculateValues(props) {
+        console.log("investment Summary props:", props)
         const { data, investmentType } = props
         let totalBookValue = 0
         let totalMarketValue = 0
         data.forEach((investment) => {
-            const { amount, averagePrice, price } = investment
+            const { amount, averagePrice, latestPrice } = investment
             totalBookValue += amount * averagePrice
-            totalMarketValue += amount * price
+            totalMarketValue += amount * latestPrice
         })
         this.setState({
             totalBookValue: numeral(totalBookValue).format('$0,0.00'),
@@ -43,6 +44,7 @@ class InvestmentSummary extends Component {
             <View>
                 {/* <Text> */}
                 <Text>{this.state.totalMarketValue} | {this.state.totalBookValue} | {this.state.dollarChange} | {this.state.percentChange}</Text>
+
             </View>
         )
     }

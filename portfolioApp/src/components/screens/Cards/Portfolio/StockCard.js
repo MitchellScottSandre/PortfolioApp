@@ -49,10 +49,8 @@ class StockCard extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('symbols:', state.investments.symbols)
-    console.log('investments is:', state.investments)
-    let a = _.map(state.investments.stocks, (stock) => { return stock })
-    // console.log('a is:', a)
+    console.log('Stock Card props from redux', state)
+
     return {
         stocks: _.map(state.investments.stocks, (stock) => { return stock }),
         lastStockDataFetchTime: state.investments.lastStockDataFetchTime
