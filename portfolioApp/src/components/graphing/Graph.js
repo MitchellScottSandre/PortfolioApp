@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
-import { LineChart, Grid } from 'react-native-svg-charts'
+import { View, Text } from 'react-native'
+import { LineChart } from 'react-native-svg-charts'
 import { connect } from 'react-redux'
 import { fetchStockBookData } from '../../actions/GraphingActions'
+import YAxis from './YAxis'
+import XAxis from './XAxis'
+
+const graphHeight = 200
 
 class Graph extends Component {
 
@@ -9,48 +14,77 @@ class Graph extends Component {
         super(props)
 
         this.state = {
-            selectedSymbol: ''
+            selectedSymbol: '',
+            selectedName: '',
+            selectedDateRange: '1D',
+            graphData: null
         }
     }
 
     componentWillReceiveProps(nextProps) {
         const { investmentType, cardData } = nextProps
         let graphSymbol = ''
-        if ('selectedSymbol' in cardData[investmentType]) {
-            graphSymbol = cardData[investmentType].selectedSymbol
-            if (graphSymbol === this.state.selectedSymbol) return
+
+        this.setState({ graphData: nextProps.graphData })
+
+        if ('selectedItem' in cardData[investmentType]) {
+            const item = cardData[investmentType].selectedItem
+            const { symbol, name } = item
+            if (symbol === this.state.selectedSymbol) return
             
-            this.setState({ selectedSymbol: graphSymbol })
-        } else {
-            return
-        }
-        console.log('graph componentWillReceiveProps', investmentType, cardData)
-        //investmentType
-        nextProps.fetchStockBookData(graphSymbol, "1D")
+            this.setState({ 
+                selectedSymbol: symbol,
+                selectedName: name
+            })
+
+            //investmentType
+            nextProps.fetchStockBookData(symbol, this.state.selectedDateRange)
+        } 
     }
 
     render() {
+        const { minVal, maxVal, bookData, dateData } = (this.state.graphData || {})
+        console.log(this.props.graphData)
         return (
-            <LineChart
-                style={{ height: 200 }}
-                data={this.props.graphData || []}
-                svg={{ stroke: 'rgb(134, 65, 244)' }}
-                contentInset={{ top: 20, bottom: 20 }}
-            >
-                <Grid />
-            </LineChart>
+            <View>
+                <View style={{ flexDirection: 'row' }}>
+                    <YAxis
+                        minVal={minVal}
+                        maxVal={maxVal}
+                        graphHeight={graphHeight}
+                    />
+                    {!!bookData && 
+                        <LineChart
+                            style={{ height: graphHeight, flex: 1, marginLeft: 15 }}
+                            data={bookData}
+                            svg={{ stroke: 'rgb(134, 65, 244)' }}
+                            contentInset={{ top: 0, bottom: 0 }}
+                            gridMin={minVal}
+                            gridMax={maxVal}
+                            animate
+                        />
+                    }
+                </View>
+                <XAxis
+                    dateData={dateData}
+                />
+                {/* <Text>{this.state.selectedName || ''}</Text> */}
+            </View>
+            
+            
         )
     }
 }
 
 const mapStateToProps = state => {
     console.log('Graph map state to props', state)
-    let data = []
-    if (state.graphing && state.graphing.stockInfo && state.graphing.stockInfo.data) {
-        data = state.graphing.stockInfo.data
+    let graphData = []
+    if (state.graphing && state.graphing.stockInfo && state.graphing.stockInfo.graphData) {
+        graphData = state.graphing.stockInfo.graphData
+        console.log('book data is', graphData)
     }
     return {
-        graphData: data,
+        graphData,
         cardData: state.cards
     }
 }

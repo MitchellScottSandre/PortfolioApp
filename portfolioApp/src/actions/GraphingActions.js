@@ -20,7 +20,7 @@ export const fetchStockBookData = (stockSymbol, dateRange) => {
                     payload: {
                         stockSymbol,
                         dateRange,
-                        data: processBookData(dateRange, bookInfo)
+                        graphData: processBookData(dateRange, bookInfo)
                     }
                 })
             })
@@ -31,7 +31,40 @@ export const fetchStockBookData = (stockSymbol, dateRange) => {
 // Helper functions
 
 export const processBookData = (dateRange, allData) => {
+
+    let minVal = Number.MAX_VALUE
+    let maxVal = Number.MIN_VALUE
+    const numberItems = Object.keys(allData).length 
+    const numberDatePoints = 5 //(first, 1, 2, 3, last) for 5 total
+    const datePointGap = numberItems / numberDatePoints
+    const dateDataField = dateRange === "1D" ? 'minute' : 'date'
+    let dateData = []
+    let bookData = []
     if (dateRange === "1D") {
-        return _.map(allData, (data) => data.marketAverage)
+        let index = 0
+        bookData = _.map(allData, (data) => {
+            // dateData.push(data[dateDataField])
+            if (index === 0) {
+                dateData.push(data[dateDataField])
+            } else if (index === numberItems - 1) {
+                dateData.push(data[dateDataField])
+            } else if (index % datePointGap === 0) {
+                dateData.push(data[dateDataField])
+            }
+            if (data.marketAverage < minVal) {
+                minVal = data.marketAverage
+            } else if (data.marketAverage > maxVal) {
+                maxVal = data.marketAverage
+            }
+            index++
+            return data.marketAverage
+        })
+    }
+
+    return {
+        bookData,
+        minVal,
+        maxVal,
+        dateData
     }
 }

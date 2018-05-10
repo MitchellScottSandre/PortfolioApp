@@ -13,7 +13,7 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 [action.payload.cardInvestmentType]: {
                     ...state[action.payload.cardInvestmentType],
-                    selectedSymbol: action.payload.itemSymbol
+                    selectedItem: action.payload.item
                 }
             }
         default: return state

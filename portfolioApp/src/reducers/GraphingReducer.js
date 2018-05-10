@@ -19,7 +19,7 @@ export default (state = INITIAL_STATE, action) => {
                 stockInfo: {
                     symbol: action.payload.stockInfo,
                     dateRange: action.payload.dateRange,
-                    data: action.payload.data
+                    graphData: action.payload.graphData
                 }
             }
 

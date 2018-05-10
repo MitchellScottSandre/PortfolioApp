@@ -16,7 +16,7 @@ class InvestmentCard extends Component {
             <InvestmentListItem 
                 key={index} 
                 info={item} 
-                onPress={() => this.props.setSelectedItem(this.props.investmentType, item.symbol)}
+                onPress={() => this.props.setSelectedItem(this.props.investmentType, item)}
             />
         )
     }

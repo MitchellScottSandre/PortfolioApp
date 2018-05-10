@@ -5,14 +5,14 @@ import {
 } from './types'
 
 
-export const setSelectedItem = (cardInvestmentType, itemSymbol) => {
-    console.log('set selected item called,', cardInvestmentType, itemSymbol)
+export const setSelectedItem = (cardInvestmentType, item) => {
+    console.log('set selected item called,', cardInvestmentType, item)
     return (dispatch) => {
         dispatch({
             type: ITEM_SELECTED,
             payload: {
                 cardInvestmentType,
-                itemSymbol
+                item
             }
         })
     }
