@@ -6,6 +6,7 @@ import InvestmentReducer from './InvestmentReducer'
 import SearchReducer from './SearchReducer'
 import GraphingReducer from './GraphingReducer'
 import CardReducer from './CardReducer'
+import BookReducer from './BookReducer'
 import { root } from './RootReducer'
 
 export default combineReducers({
@@ -14,6 +15,7 @@ export default combineReducers({
     search: SearchReducer, 
     root,
     graphing: GraphingReducer,
-    cards: CardReducer
+    cards: CardReducer,
+    bookData: BookReducer
 })
 

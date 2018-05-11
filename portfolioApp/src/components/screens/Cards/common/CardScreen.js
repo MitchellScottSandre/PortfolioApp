@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, ScrollView, Dimensions } from 'react-native'
 // import SmartCard from '../common/SmartCard'
 
-const { width } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 
 class CardScreen extends Component {
 
@@ -11,7 +11,12 @@ class CardScreen extends Component {
         const { containerStyle } = styles
         return (
             <View style={containerStyle}>
-                <ScrollView >
+                <ScrollView 
+                    snapToAlignment='start'
+                    // snapToInterval={2}
+                    decelerationRate="fast"
+                    // contentContainerStyle={{flex:1}}
+                >
                     {cards}
                 </ScrollView>
             </View>
@@ -22,7 +27,8 @@ class CardScreen extends Component {
 const styles = {
     containerStyle: {
         flex: 1, 
-        width
+        width,
+        // flexDirection: 'row'
     }
 }
 

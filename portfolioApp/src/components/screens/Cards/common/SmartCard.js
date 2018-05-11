@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-// import { Dimensions } from 'react-native'
+import { Dimensions } from 'react-native'
 import { Card } from 'react-native-elements'
 
-// const { width } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 
 class SmartCard extends Component {
 
@@ -19,7 +19,8 @@ class SmartCard extends Component {
 
 const styles = {
     containerStyle: {
-        flex: 1
+        flex: 1,
+        maxHeight: height - 60
     },
     defaultTitleStyle: {
         textAlign: 'left'

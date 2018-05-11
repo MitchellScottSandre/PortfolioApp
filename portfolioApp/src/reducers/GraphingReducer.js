@@ -1,23 +1,23 @@
 import {
-    STOCK_FETCH_BOOK
+    SET_GRAPH_DATA
 } from '../actions/types'
 
 const INITIAL_STATE = {
-    stockInfo: {
+    stocks: {
         symbol: '',
         dateRange: '',
-        data: []
+        graphData: {}
     }             
 }
 
 export default (state = INITIAL_STATE, action) => {
-    
     switch (action.type) {
-        case STOCK_FETCH_BOOK:
+        case SET_GRAPH_DATA:
+            console.log('set graph data', action)
             return {
                 ...state,
-                stockInfo: {
-                    symbol: action.payload.stockInfo,
+                [action.payload.investmentType]: {
+                    symbol: action.payload.symbol,
                     dateRange: action.payload.dateRange,
                     graphData: action.payload.graphData
                 }

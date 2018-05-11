@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 
 const InvestmentListItem = (props) => {
-    console.log('investment list item: props.info', props.info)
+    // console.log('investment list item: props.info', props.info)
     const { name, symbol, averagePrice, change, changePercent, amount, latestPrice, latestTime, exchange, close, closeTime, sector } = props.info
     // const { INVESTMENT_INFO.symbol } = props.info
     const { cellContainerStyle } = styles

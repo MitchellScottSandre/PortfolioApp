@@ -37,7 +37,7 @@ class InvestmentCard extends Component {
 
                     <InvestmentSummary data={data} investmentType={investmentType} />
 
-                    <ScrollView>
+                    <ScrollView style={{ height: 300 }}>
                         {this._renderData()}
                     </ScrollView>
 

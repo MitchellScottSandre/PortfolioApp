@@ -29,7 +29,10 @@ export const SEARCH_ALL = 'search_all'
 export const SEARCH_STOCKS = 'search_stocks'
 
 // Graph Types
-export const STOCK_FETCH_BOOK = 'stock_fetch_book'
+export const SET_GRAPH_DATA = 'setGraphData'
 
 // Card Types
 export const ITEM_SELECTED = 'cardItemSelected'
+
+// Book Types
+export const SAVE_BOOK_DATA = 'saveBookData'
