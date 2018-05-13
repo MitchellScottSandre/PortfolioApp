@@ -24,7 +24,7 @@ export default class DateRangeSelector extends Component {
                 key={index}
             >
                 <View style={index === this.state.selectedRangeIndex ? selectedRangeOptionStyle : rangeOptionStyle}>
-                    <Text>{range}</Text>
+                    <Text style={{ fontSize: 8 }}>{range}</Text>
                 </View>
             </TouchableWithoutFeedback>
         )

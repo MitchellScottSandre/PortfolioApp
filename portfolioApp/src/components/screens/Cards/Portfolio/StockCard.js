@@ -41,7 +41,12 @@ class StockCard extends Component {
                     parentDismissModal={() => this.setState({ showSearchModal: false })} 
                     onSearchResultAdd={this._onSearchResultAdd.bind(this)}
                 /> 
-                <InvestmentCard title='Stocks' data={stocks} onPlusButtonPress={() => this._showAddStockModal()} investmentType='stocks' />
+                <InvestmentCard 
+                    title='Stocks' 
+                    data={stocks} 
+                    onPlusButtonPress={() => this._showAddStockModal()} 
+                    investmentType={INVESTMENT_STOCKS} 
+                />
             </View>
         )
     }

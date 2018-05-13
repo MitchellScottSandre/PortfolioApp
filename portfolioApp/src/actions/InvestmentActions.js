@@ -2,7 +2,6 @@ import firebase from 'firebase'
 import _ from 'lodash'
 import axios from 'axios'
 import { API } from '../Constants'
-// import { jsonToArray, mergeDataSetsByKeys, isLastCloseDate } from '../utils/functions'
 import {
     INVESTMENT_ADD_SUCCESS, 
     INVESTMENT_STOCKS,
@@ -11,8 +10,10 @@ import {
     INVESTMENT_CRYPTOS
 } from './types'
 
+// Add a single investment, selected from a quantity modal
+// Need to add the investment symbol, name, averagePrice, and amount to firebase
+// Then, need to go and get the latest price for that investment
 export const investmentAdd = (investmentType, investment) => {
-    console.log('addInvestment', investmentType, investment)
     const { name, symbol, exchange, price, amount } = (investment || {})
     const { currentUser } = firebase.auth()
 
@@ -30,13 +31,15 @@ export const investmentAdd = (investmentType, investment) => {
                 exchange
             }
         }
+
+        // Add the data to firebase, then get the price and save to redux
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}/${symbol}`)
             .set(dataToSet)
             .then(() => {
                 const investmentInfo = { name, exchange, amount, averagePrice: price }
                 switch (investmentType) {
                     case INVESTMENT_STOCKS: 
-                        stockFetch(dispatch, symbol, investmentInfo)
+                        stockFetchPriceAndSave(dispatch, symbol, investmentInfo)
                         break
                     case INVESTMENT_CRYPTOS:
                         addCrypto(dispatch, getState, symbol, investmentInfo, investmentType)
@@ -47,9 +50,9 @@ export const investmentAdd = (investmentType, investment) => {
     }
 }
 
-// Get all Stocks, ETFs, Bonds, Mutual Funds, and Cryptos from Firebase
+// Pull all the firebase information for this investment and go fetch the latest price data
+// for each investment, if we have to
 export const investmentFetchAll = (investmentType) => {
-    console.log('investmentFetchAll!!!')
     const { currentUser } = firebase.auth()
     return (dispatch, getState) => {
         firebase.database().ref(`/users/${currentUser.uid}/investments/${investmentType}`)
@@ -62,7 +65,7 @@ export const investmentFetchAll = (investmentType) => {
 
             switch (investmentType) {
                 case INVESTMENT_STOCKS: 
-                    stockFetchAll(dispatch, symbolsString, investments)
+                    stockFetchAllLatestPrices(dispatch, symbolsString, investments)
                     break
                 case INVESTMENT_CRYPTOS:
                     cryptoFetchAll(dispatch, getState, symbolsString, investments)
@@ -73,24 +76,22 @@ export const investmentFetchAll = (investmentType) => {
     }
 }
 
-export const stockFetchAll = (dispatch, symbolsString, stocks) => {
+// Given a list of stock symbols, and the current data for the stock from Firebase,
+// fetch all of the latest data for each stock and then add the total stock data object
+// to redux -> investments -> stocks
+const stockFetchAllLatestPrices = (dispatch, symbolsString, stocks) => {
     if (symbolsString.length === 0) return
     const { baseUrl } = API.IEX_TRADING
     let url = `${baseUrl}/stock/market/batch?symbols=${symbolsString}&types=quote`
+
     axios.get(url)
         .then((response) => {
             const stocksInfo = response.data
+
+            // We do this for each stock since we aren't replacing everything at investments -> stocks -> symbol.
+            // Instead, just updating what we need to
             _.forEach(stocksInfo, (stockInfo) => {
-                const { 
-                    symbol,
-                    change,
-                    changePercent, 
-                    latestPrice,
-                    close,
-                    closeTime,
-                    sector,
-                    latestTime
-                } = stockInfo.quote
+                const { symbol, change, changePercent, latestPrice, close, closeTime, sector, latestTime } = stockInfo.quote
 
                 dispatch({
                     type: INVESTMENT_ADD_SUCCESS,
@@ -105,7 +106,7 @@ export const stockFetchAll = (dispatch, symbolsString, stocks) => {
                             closeTime, 
                             sector,
                             latestTime,
-                            ...stocks[symbol]
+                            ...stocks[symbol] // Include the average price, amount, etc, information
                         }
                     }
                 })
@@ -113,7 +114,8 @@ export const stockFetchAll = (dispatch, symbolsString, stocks) => {
         })
 }
 
-export const stockFetch = (dispatch, symbol, investmentInfo) => {
+// Fetch the price for a single stock, then save to redux state
+export const stockFetchPriceAndSave = (dispatch, symbol, investmentInfo) => {
     if (symbol.length === 0) return
     const { baseUrl } = API.IEX_TRADING
     let url = `${baseUrl}/stock/${symbol}/book`
@@ -160,11 +162,14 @@ export const investmentUpdateTotals = ({ investmentType, totalBookValue, totalMa
     }
 }
 
+// Get the crypto latest price from book and save to redux state
+// TODO need to actually go and refresh and get the newest data
 const addCrypto = (dispatch, getState, symbol, investmentInfo, investmentType) => {
     const { name, price, amount } = investmentInfo
     const { bookData } = getState()
     const { cryptoPrices } = bookData
     const cryptoData = cryptoPrices[symbol]
+
     return dispatch({
         type: INVESTMENT_ADD_SUCCESS,
         payload: {
@@ -180,6 +185,9 @@ const addCrypto = (dispatch, getState, symbol, investmentInfo, investmentType) =
     })
 }
 
+// Fetch all of the crypto information from firebase. Update with latest price information
+// TODO this needs to use the actual latest price. 
+// And then save to redux state
 const cryptoFetchAll = (dispatch, getState, symbolsString, investments) => {
     const { bookData } = getState()
     const { cryptoPrices } = bookData

@@ -37,7 +37,12 @@ class CryptoCard extends Component {
                     parentDismissModal={() => this.setState({ showSearchModal: false })} 
                     onSearchResultAdd={this._onSearchResultAdd.bind(this)}
                 /> 
-                <InvestmentCard title='Crypto' data={cryptos} onPlusButtonPress={() => this._showAddModal()} investmentType='stocks' />
+                <InvestmentCard 
+                    title='Crypto' 
+                    data={cryptos} 
+                    onPlusButtonPress={() => this._showAddModal()} 
+                    investmentType={INVESTMENT_CRYPTOS} 
+                />
             </View>
         )
     }

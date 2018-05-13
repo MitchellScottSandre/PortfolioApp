@@ -25,12 +25,18 @@ class Graph extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { investmentType, cardData } = nextProps
+        const { investmentType, cardData, graphingData } = nextProps
 
-        this.setState({ graphData: nextProps.graphData })
+        let data = []
+        if (graphingData && investmentType in graphingData && 'graphData' in graphingData[investmentType]) {
+            console.log('Graph -> ', investmentType, graphingData[investmentType].graphData)
+            data = graphingData[investmentType].graphData
+        }
+
+        this.setState({ graphData: data })
 
         // If there is a selected item
-        if ('selectedItem' in cardData[investmentType]) {
+        if (cardData && investmentType in cardData && 'selectedItem' in cardData[investmentType]) {
             const item = cardData[investmentType].selectedItem
             const { symbol, name } = item
 
@@ -54,7 +60,7 @@ class Graph extends Component {
 
     render() {
         const { minVal, maxVal, bookData, dateData } = (this.state.graphData || {})
-        // console.log(this.props.graphData)
+        
         return (
             <View>
                 <View style={{ flexDirection: 'row' }}>
@@ -82,23 +88,24 @@ class Graph extends Component {
                     dateRangeOptions={dateRangeOptions}
                     onPress={this._dateRangeChanged.bind(this)}
                 />
-                {/* <Text>{this.state.selectedName || ''}</Text> */}
+                <Text>{this.state.selectedName || ''}</Text>
             </View>    
         )
     }
 }
 
 const mapStateToProps = state => {
-    console.log('Graph map state to props', state)
-    let graphData = []
-    if (state.graphing && state.graphing.stocks && state.graphing.stocks.graphData) {
-        graphData = state.graphing.stocks.graphData
-        console.log('book data is', graphData)
-    } else {
-        console.log('no stocks.graphData')
-    }
+    // console.log('Graph map state to props', state)
+    // let graphData = []
+    // if (state.graphing && state.graphing.stocks && state.graphing.stocks.graphData) {
+    //     graphData = state.graphing.stocks.graphData
+    //     console.log('book data is', graphData)
+    // } else {
+    //     console.log('no stocks.graphData')
+    // }
     return {
-        graphData,
+        // graphData,
+        graphingData: state.graphing,
         cardData: state.cards
     }
 }
