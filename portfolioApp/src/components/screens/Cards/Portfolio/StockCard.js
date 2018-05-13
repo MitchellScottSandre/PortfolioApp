@@ -17,7 +17,6 @@ class StockCard extends Component {
     }
     componentWillMount() {
         console.log('stock card component will mount...')
-        // this.props.investmentFetchAll(INVESTMENT_STOCKS)
     }
 
     _showAddStockModal() {

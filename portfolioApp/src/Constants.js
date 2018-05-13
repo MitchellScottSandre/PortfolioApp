@@ -31,6 +31,10 @@ const API = {
     },
     IEX_TRADING: {
         baseUrl: 'https://api.iextrading.com/1.0'
+    },
+    COIN_MARKET_CAP: {
+        baseUrl: 'https://api.coinmarketcap.com/v2',
+        listings: 'ticker/'
     }
 }
 

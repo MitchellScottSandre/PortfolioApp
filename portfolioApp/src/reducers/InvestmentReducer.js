@@ -1,9 +1,8 @@
 import { 
     INVESTMENT_ADD_SUCCESS,
-    INVESTMENT_FETCH_PRICE_SUCCESS,
     INVESTMENT_FETCH_ALL_SUCCESS, 
     INVESTMENT_UPDATE_TOTALS,
-    INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS
+    INVESTMENT_CRYPTO_FETCH_ALL_SUCCESS
 } from '../actions/types'
 // import { addDataToUniqueArray } from '../utils/functions'
 
@@ -15,46 +14,22 @@ const INITIAL_STATE = {
 }
 
 export default (state = INITIAL_STATE, action) => {
-    
     switch (action.type) {
         case INVESTMENT_ADD_SUCCESS:
             console.log('investment add success:', action.payload)
+            // const currInvestmentData = state[action.payload.investmentType]
+            // const currSymbolData = (currInvestmentData[action.payload.value.symbol] || {})
             return {
                 ...state,
                 [action.payload.investmentType]: {
                     ...state[action.payload.investmentType],
                     [action.payload.value.symbol]: {
-                        ...state[action.payload.investmentType][action.payload.value.symbol],
+                        // ...currSymbolData,
                         ...action.payload.value
                     }
                 },
                 symbols: [...state.symbols, action.payload.value.symbol]
             }
-        // case INVESTMENT_FETCH_PRICE_SUCCESS:
-        //     console.log('investment fetch price success:', action.payload)
-        //     return {
-        //         ...state,
-        //         [action.payload.investmentType]: {
-        //             ...state[action.payload.investmentType],
-        //             [action.payload.value.symbol]: {
-        //                 ...state[action.payload.investmentType][action.payload.value.symbol],
-        //                 ...action.payload.value
-        //             }
-        //         }
-        //     }
-        // case INVESTMENT_FETCH_CLOSE_PRICE_SUCCESS: 
-        //     console.log('investment fetch close price success', action.payload)
-        //     return {
-        //         ...state,
-        //         [action.payload.investmentType]: {
-        //             ...state[action.payload.investmentType],
-        //             [action.payload.symbol]: {
-        //                 ...state[action.payload.investmentType][action.payload.symbol],
-        //                 closeDate: action.payload.closeDate,
-        //                 closePrice: action.payload.closePrice
-        //             }
-        //         }
-        //     }
         case INVESTMENT_FETCH_ALL_SUCCESS: 
             return {
                 ...state,
@@ -73,8 +48,6 @@ export default (state = INITIAL_STATE, action) => {
                     }
                 }
             }
-    
-        
         default: return state
     }
 }
