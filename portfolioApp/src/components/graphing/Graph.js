@@ -3,13 +3,12 @@ import { View, Text } from 'react-native'
 import { LineChart } from 'react-native-svg-charts'
 import { connect } from 'react-redux'
 
-import { getBookData } from '../../actions/GraphingActions'
+import { getBookData, dateRangeOptions } from '../../actions/GraphingActions'
 import YAxis from './YAxis'
 import XAxis from './XAxis'
 import DateRangeSelector from './DateRangeSelector'
-const graphHeight = 150
 
-const dateRangeOptions = ["1D", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"]
+const graphHeight = 150
 
 class Graph extends Component {
 
@@ -47,7 +46,7 @@ class Graph extends Component {
                     selectedName: name,
                 })
 
-                nextProps.getBookData('stocks', symbol, this.state.selectedDateRange)
+                nextProps.getBookData(investmentType, symbol, this.state.selectedDateRange)
             }
         } 
     }

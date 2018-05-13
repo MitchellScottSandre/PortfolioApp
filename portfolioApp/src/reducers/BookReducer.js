@@ -17,6 +17,7 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 [action.payload.investmentType]: {
+                    ...state[action.payload.investmentType],
                     [action.payload.symbol]: {
                         ...currSymbolData,
                         [action.payload.dateRange]: action.payload.graphData

@@ -17,7 +17,9 @@ const API = {
         baseUrl: 'https://www.alphavantage.co/query?',
         functions: {
             batchStockQuotes: 'BATCH_STOCK_QUOTES',
-            timeSeriesDaily: 'TIME_SERIES_DAILY'
+            timeSeriesDaily: 'TIME_SERIES_DAILY',
+            digitalCurrencyDaily: 'DIGITAL_CURRENCY_DAILY',
+            digitalCurrencyIntraday: 'DIGITAL_CURRENCY_INTRADAY'
         }
     },
     SYMBOL_SEARCH: {

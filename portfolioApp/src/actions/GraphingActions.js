@@ -3,12 +3,15 @@ import _ from 'lodash'
 import { API } from '../Constants'
 import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS } from './types'
 
+export const dateRangeOptions = ["1D", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"]
+
 export const getBookData = (investmentType, symbol, dateRange) => {
     console.log('Graphing Actions called', investmentType, symbol, dateRange)
 
     // First, check if the data already exists in bookData (from BookReducer)
     return (dispatch, getState) => {
         const { bookData } = getState()
+        console.log('book data --->', bookData)
         if (bookData && investmentType in bookData && symbol in bookData[investmentType] && dateRange in bookData[investmentType][symbol]) {
             console.log('-----> DATA ALREADY EXISTS IN BOOK')
             return dispatch({
@@ -44,33 +47,56 @@ const fetchStockBookData = (stockSymbol, dateRange) => {
         axios.get(url)
             .then((response) => {
                 const bookInfo = response.data
-                const processedBookData = processBookData(dateRange, bookInfo)
-                console.log('processedBookData', processedBookData)
-                dispatch({
-                    type: SAVE_BOOK_DATA,
-                    payload: {
-                        investmentType: 'stocks',
-                        symbol: stockSymbol,
-                        dateRange,
-                        graphData: processedBookData
-                    }
-                })
-                
-                dispatch({
-                    type: SET_GRAPH_DATA,
-                    payload: {
-                        investmentType: 'stocks',
-                        symbol: stockSymbol,
-                        dateRange,
-                        graphData: processedBookData
-                    }
-                })
+                const processedBookData = processBookData(dateRange, bookInfo, 'IEX')
+                return saveBookData(dispatch, processedBookData, INVESTMENT_STOCKS, stockSymbol, dateRange)
             })
     }
 }
 
-const fetchCryptoBookData = () => {
-    // TODO
+const fetchCryptoBookData = (symbol, dateRange) => {
+    const { baseUrl, functions, apiKey } = API.ALPHA_VANTAGE
+    const { digitalCurrencyDaily } = functions
+    // TODO 1: Use daily or intraday based on the date range
+    const url = `${baseUrl}function=${digitalCurrencyDaily}&symbol=${symbol}&market=USD&apikey=${apiKey}`
+    console.log('url is:', url)
+    return (dispatch) => {
+        axios.get(url)
+        .then(response => {
+            const { data } = response
+            const bookData = data['Time Series (Digital Currency Daily)']
+
+            // TODO 2: Slice the data based on the date range
+            // Slice the book data according to the date range
+            // switch (dateRange) {
+            //     case dateRangeOptions[0]:
+            // }
+
+            const processedBookData = processBookData(dateRange, bookData, 'ALPHA')
+            return saveBookData(dispatch, processedBookData, INVESTMENT_CRYPTOS, symbol, dateRange)
+        })
+    }
+}
+
+const saveBookData = (dispatch, bookData, investmentType, symbol, dateRange) => {
+    dispatch({
+        type: SAVE_BOOK_DATA,
+        payload: {
+            investmentType,
+            symbol,
+            dateRange,
+            graphData: bookData
+        }
+    })
+    
+    dispatch({
+        type: SET_GRAPH_DATA,
+        payload: {
+            investmentType,
+            symbol,
+            dateRange,
+            graphData: bookData
+        }
+    })
 }
 
 // Helper functions
@@ -86,34 +112,54 @@ const getFilters = (dateRange) => {
     return "date,close"
 }
 
-export const processBookData = (dateRange, allData) => {
-    let minVal = Number.MAX_VALUE
-    let maxVal = Number.MIN_VALUE
-    const numberItems = Object.keys(allData).length 
-    const numberDatePoints = 5 //(first, 1, 2, 3, last) for 5 total
+const getDateField = (dateRange, apiSource) => {
+    if (apiSource === 'IEX') {
+        return dateRange === "1D" ? 'minute' : 'date'
+    } else if (apiSource === 'ALPHA') {
+        return 'USE_KEY'
+    }
+}
+
+const getPriceField = (dateRange, apiSource) => {
+    if (apiSource === 'IEX') {
+        return dateRange === "1D" ? 'marketAverage' : 'close'
+    } else if (apiSource === 'ALPHA') {
+        return '4b. close (USD)'
+    }
+}
+
+// Get the dateData, bookData, minVal, and maxVal from the API response data
+export const processBookData = (dateRange, allData, apiSource) => {
+    const keys = Object.keys(allData)
+    const numberItems = keys.length 
+    const numberDatePoints = 5 
     const datePointGap = numberItems / numberDatePoints
-    const dateDataField = dateRange === "1D" ? 'minute' : 'date'
-    const valueDataField = dateRange === "1D" ? 'marketAverage' : 'close'
+    const dateDataField = getDateField(dateRange, apiSource)
+    const valueDataField = getPriceField(dateRange, apiSource)
+
     let dateData = []
     let bookData = []
+    let minVal = Number.MAX_VALUE
+    let maxVal = Number.MIN_VALUE
 
     let index = 0
     bookData = _.map(allData, (data) => {
-        // dateData.push(data[dateDataField])
+        const date = dateDataField === 'USE_KEY' ? keys[index] : data[dateDataField]
+        const numVal = apiSource === 'ALPHA' ? parseInt(data[valueDataField], 10) : data[valueDataField]
         if (index === 0) {
-            dateData.push(data[dateDataField])
+            dateData.push(date)
         } else if (index === numberItems - 1) {
-            dateData.push(data[dateDataField])
+            dateData.push(date)
         } else if (index % datePointGap === 0) {
-            dateData.push(data[dateDataField])
+            dateData.push(date)
         }
         if (data[valueDataField] < minVal) {
-            minVal = data[valueDataField]
+            minVal = numVal
         } else if (data[valueDataField] > maxVal) {
-            maxVal = data[valueDataField]
+            maxVal = numVal
         }
         index++
-        return data[valueDataField]
+        return numVal
     })
 
     return {
