@@ -1,10 +1,11 @@
 import axios from 'axios'
 import _ from 'lodash'
 import { API } from '../Constants'
-import { SET_GRAPH_DATA, SAVE_BOOK_DATA } from './types'
+import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS } from './types'
 
 export const getBookData = (investmentType, symbol, dateRange) => {
     console.log('Graphing Actions called', investmentType, symbol, dateRange)
+
     // First, check if the data already exists in bookData (from BookReducer)
     return (dispatch, getState) => {
         const { bookData } = getState()
@@ -13,15 +14,22 @@ export const getBookData = (investmentType, symbol, dateRange) => {
             return dispatch({
                 type: SET_GRAPH_DATA,
                 payload: {
-                    investmentType: 'stocks',
+                    investmentType,
                     symbol,
                     dateRange,
                     graphData: bookData[investmentType][symbol][dateRange]
                 }
             })
-        } else {
-            console.log('-----> DATA DOESNT EXIST IN BOOK')
-            return dispatch(fetchStockBookData(symbol, dateRange))
+        } 
+    
+        console.log('-----> DATA DOESNT EXIST IN BOOK')
+        switch (investmentType) {
+            case INVESTMENT_STOCKS:
+                return dispatch(fetchStockBookData(symbol, dateRange))
+            case INVESTMENT_CRYPTOS:
+                return dispatch(fetchCryptoBookData(symbol, dateRange))
+            default:
+
         }
     }
 }
@@ -61,6 +69,11 @@ const fetchStockBookData = (stockSymbol, dateRange) => {
     }
 }
 
+const fetchCryptoBookData = () => {
+    // TODO
+}
+
+// Helper functions
 const getParams = (dateRange) => {
     return `?&filter=${getFilters(dateRange)}`
 }
@@ -72,8 +85,6 @@ const getFilters = (dateRange) => {
     
     return "date,close"
 }
-
-// Helper functions
 
 export const processBookData = (dateRange, allData) => {
     let minVal = Number.MAX_VALUE

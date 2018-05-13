@@ -45,7 +45,6 @@ class Graph extends Component {
                 this.setState({ 
                     selectedSymbol: symbol,
                     selectedName: name,
-                    // selectedDateRange: dateRangeOptions[1],
                 })
 
                 nextProps.getBookData('stocks', symbol, this.state.selectedDateRange)
@@ -69,6 +68,7 @@ class Graph extends Component {
                         maxVal={maxVal}
                         graphHeight={graphHeight}
                     />
+
                     {!!bookData && 
                         <LineChart
                             style={{ height: graphHeight, flex: 1, marginLeft: 15 }}
@@ -95,16 +95,7 @@ class Graph extends Component {
 }
 
 const mapStateToProps = state => {
-    // console.log('Graph map state to props', state)
-    // let graphData = []
-    // if (state.graphing && state.graphing.stocks && state.graphing.stocks.graphData) {
-    //     graphData = state.graphing.stocks.graphData
-    //     console.log('book data is', graphData)
-    // } else {
-    //     console.log('no stocks.graphData')
-    // }
     return {
-        // graphData,
         graphingData: state.graphing,
         cardData: state.cards
     }

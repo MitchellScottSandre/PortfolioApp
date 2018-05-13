@@ -23,7 +23,6 @@ class InvestmentCard extends Component {
     
     render() {
         const { onPlusButtonPress, data, investmentType, title } = this.props
-        const { graphViewStyle } = styles
 
         return (
             <SmartCard {...this.props} showPlusButton >
@@ -50,15 +49,7 @@ class InvestmentCard extends Component {
     }
 }
 
-const styles = {
-    graphViewStyle: {
-        height: 50
-    }
-}
-
 const mapStateToProps = state => {
-    console.log('investment card Card props from redux', state)
-
     return {
         cardData: state.cards
     }
