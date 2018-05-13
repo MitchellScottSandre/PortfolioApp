@@ -1,5 +1,6 @@
 import {
-    SAVE_BOOK_DATA
+    SAVE_BOOK_DATA,
+    BOOK_CRYPTO_FETCH_ALL_PRICE_SUCCESS
 } from '../actions/types'
 
 const INITIAL_STATE = {     
@@ -21,6 +22,13 @@ export default (state = INITIAL_STATE, action) => {
                         [action.payload.dateRange]: action.payload.graphData
                     }
                 }
+            }
+
+        case BOOK_CRYPTO_FETCH_ALL_PRICE_SUCCESS: 
+            console.log('INVESTMENT_CRYPTO_FETCH_ALL_SUCCESS', action.payload)
+            return {
+                ...state,
+                cryptoPrices: action.payload
             }
 
         default: return state

@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { View, ScrollView } from 'react-native'
+import { View, ScrollView, Dimensions } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import Modal from 'react-native-modal'
 import { connect } from 'react-redux'
 import { searchFieldTextChange } from '../../../../actions/SearchActions'
 import SearchResultListItem from './SearchResultListItem'
 import QuantityModal from './QuantityModal'
+
+const { height } = Dimensions.get('window')
 
 class SearchModal extends Component {
 
@@ -27,7 +29,7 @@ class SearchModal extends Component {
 
     _renderResults() {
         const { symbols } = this.props
-        console.log('search modal: symbols', symbols)
+        console.log('search modal symbols', symbols)
         return this.props.searchResults.map((item, index) => 
             <SearchResultListItem 
                 key={index} 
@@ -82,7 +84,7 @@ class SearchModal extends Component {
                             onClearText={() => this._clearText()}
                         />
                         <View>
-                            <ScrollView>
+                            <ScrollView style={{ height: height - 200 }}>
                                 {this._renderResults()}
                             </ScrollView>
                         </View>

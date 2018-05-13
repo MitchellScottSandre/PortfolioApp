@@ -8,7 +8,7 @@ export default class YAxis extends Component {
 
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-               {_.map(dateData, (data) => <Text style={{ fontSize: 10 }}key={data}>{data}</Text>)}
+               {_.map(dateData, (data) => <Text style={{ fontSize: 8 }}key={data}>{data}</Text>)}
             </View>
         )
     }

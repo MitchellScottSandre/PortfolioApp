@@ -2,14 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import CardScreen from '../common/CardScreen'
 import StockCard from './StockCard'
-import { INVESTMENT_STOCKS } from '../../../../actions/types'
+import { INVESTMENT_STOCKS, INVESTMENT_CRYPTOS } from '../../../../actions/types'
 import { investmentFetchAll } from '../../../../actions/InvestmentActions'
-// import { loginUser } from '../../../../actions/AuthenticationActions'
-
-// const cards = [
-//     <StockCard key='1' />,
-//     // <StockCard key='2' />
-// ]
+import { cryptoFetchAllPriceData } from '../../../../actions/BookActions'
+import CryptoCard from './CryptoCard';
 
 class PortfolioScreen extends Component {
     static navigatorStyle = {
@@ -17,15 +13,15 @@ class PortfolioScreen extends Component {
     }
 
     componentWillMount() {
-        console.log('portfolio screen component will mount, calling investment fetch all')
+        this.props.cryptoFetchAllPriceData()
         this.props.investmentFetchAll(INVESTMENT_STOCKS)
+        this.props.investmentFetchAll(INVESTMENT_CRYPTOS)
     }
 
     _getCards() {
-        // navigator={this.props.navigator}
         return [
             <StockCard key='1' />,
-            // <StockCard key='2' />
+            <CryptoCard key='2' />
         ]
     }
 
@@ -37,4 +33,4 @@ class PortfolioScreen extends Component {
 }
 
 
-export default connect(null, { investmentFetchAll })(PortfolioScreen)
+export default connect(null, { investmentFetchAll, cryptoFetchAllPriceData })(PortfolioScreen)

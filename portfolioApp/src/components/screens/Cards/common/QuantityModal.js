@@ -70,8 +70,6 @@ class QuantityModal extends Component {
                                     onChangeText={(amount) => this.setState({ amount })} 
                                     keyboardType='numeric' containerStyle={inputContainerStyle} 
                                 />
-                                {/* <Text>Amount</Text>
-                                <TextInput onChangeText={(amount) => this.setState({ amount: amount })} style={inputStyle} keyboardType='numeric' /> */}
                             </View>
                             <View>
                                 <FormLabel containerStyle={inputContainerStyle}>Price</FormLabel>
@@ -79,8 +77,6 @@ class QuantityModal extends Component {
                                     onChangeText={(price) => this.setState({ price })} 
                                     keyboardType='numeric' containerStyle={inputContainerStyle} 
                                 />
-                                {/* <Text>Price</Text>
-                                <TextInput onChangeText={(price) => this.setState({ price: price })} style={inputStyle} keyboardType='numeric' /> */}
                             </View>
                             <Button 
                                 title={buttonSubmitText} style={submitButtonStyle} titleStyle={buttonTitleStyle} 

@@ -22,14 +22,14 @@ class InvestmentCard extends Component {
     }
     
     render() {
-        const { onPlusButtonPress, data, investmentType } = this.props
+        const { onPlusButtonPress, data, investmentType, title } = this.props
         const { graphViewStyle } = styles
 
         return (
             <SmartCard {...this.props} showPlusButton >
                 <View>
                     <Header
-                        leftComponent={<Text style={{ color: 'white' }}>Stocks</Text>}
+                        leftComponent={<Text style={{ color: 'white' }}>{title}</Text>}
                         rightComponent={{ icon: 'add', color: '#fff', onPress: onPlusButtonPress }}
                         outerContainerStyles={{ height: 40, paddingLeft: 15, paddingRight: 15, paddingBottom: 0, paddingTop: 0, marginBottom: 20 }}
                         innerContainerStyles={{ alignItems: 'center' }}
@@ -41,9 +41,6 @@ class InvestmentCard extends Component {
                         {this._renderData()}
                     </ScrollView>
 
-                    {/* <View style={graphViewStyle}>
-                        <Text>GRAPH TODO</Text>
-                    </View> */}
                     <Graph 
                         investmentType={investmentType}
                     />
