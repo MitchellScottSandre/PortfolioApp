@@ -52,8 +52,9 @@ class Graph extends Component {
     }
 
     _dateRangeChanged(index) {
+        const { investmentType } = this.props
         this.setState({ selectedDateRange: dateRangeOptions[index] })
-        this.props.getBookData('stocks', this.state.selectedSymbol, dateRangeOptions[index])
+        this.props.getBookData(investmentType, this.state.selectedSymbol, dateRangeOptions[index])
     }
 
     render() {

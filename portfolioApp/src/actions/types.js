@@ -39,3 +39,4 @@ export const ITEM_SELECTED = 'cardItemSelected'
 // Book Types
 export const SAVE_BOOK_DATA = 'saveBookData'
 export const BOOK_CRYPTO_FETCH_ALL_PRICE_SUCCESS = 'bookCryptoFetchedAllPrices'
+export const SAVE_RAW_DATA_BY_SEARCH_RANGE = 'saveRawDataBySearchRange'

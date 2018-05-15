@@ -19,7 +19,8 @@ const API = {
             batchStockQuotes: 'BATCH_STOCK_QUOTES',
             timeSeriesDaily: 'TIME_SERIES_DAILY',
             digitalCurrencyDaily: 'DIGITAL_CURRENCY_DAILY',
-            digitalCurrencyIntraday: 'DIGITAL_CURRENCY_INTRADAY'
+            digitalCurrencyIntraday: 'DIGITAL_CURRENCY_INTRADAY',
+            digitalCurrencyWeekly: 'DIGITAL_CURRENCY_WEEKLY'
         }
     },
     SYMBOL_SEARCH: {
