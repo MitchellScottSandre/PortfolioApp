@@ -21,7 +21,6 @@ class InvestmentSummary extends Component {
     }
 
     _calculateValues(props) {
-        console.log("investment Summary props:", props)
         const { data, investmentType } = props
         let totalBookValue = 0
         let totalMarketValue = 0
@@ -52,5 +51,3 @@ class InvestmentSummary extends Component {
 
 
 export default connect(null, { investmentUpdateTotals })(InvestmentSummary)
-
-// export default InvestmentSummary

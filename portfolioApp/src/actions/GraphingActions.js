@@ -1,7 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import { API } from '../Constants'
-import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS, SAVE_RAW_DATA_BY_SEARCH_RANGE } from './types'
+import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS } from './types'
 
 export const dateRangeOptions = ["1D", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"]
 
@@ -42,10 +42,11 @@ const fetchStockBookData = (stockSymbol, dateRange) => {
     const { baseUrl } = API.IEX_TRADING
 
     const url = `${baseUrl}/stock/${stockSymbol}/chart/${dateRange}/${getParams(dateRange)}`
-
+    console.log('fetch stock url:', url)
     return (dispatch) => {
         axios.get(url)
             .then((response) => {
+                console.log('fetch stock response', response)
                 const bookInfo = response.data
                 const processedBookData = processBookData(dateRange, bookInfo, 'IEX')
                 return saveBookData(dispatch, processedBookData, INVESTMENT_STOCKS, stockSymbol, dateRange)
@@ -63,7 +64,7 @@ const fetchCryptoBookData = (symbol, dateRange) => {
         .then(response => {
             console.log(response)
             const { data } = response
-            const { Data, TimeFrom, TimeTo } = data
+            const { Data } = data
 
             const processedBookData = processBookData(dateRange, Data, 'CRYPTO_COMPARE')
 

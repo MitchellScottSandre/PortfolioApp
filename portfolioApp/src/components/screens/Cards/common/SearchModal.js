@@ -29,7 +29,6 @@ class SearchModal extends Component {
 
     _renderResults() {
         const { symbols } = this.props
-        console.log('search modal symbols', symbols)
         return this.props.searchResults.map((item, index) => 
             <SearchResultListItem 
                 key={index} 
