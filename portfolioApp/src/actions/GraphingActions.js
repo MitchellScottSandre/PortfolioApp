@@ -116,7 +116,8 @@ const fetchCryptoBookData = (symbol, dateRange) => {
                 payload: {
                     investmentType: INVESTMENT_CRYPTOS,
                     field: dataFieldShortName,
-                    data: bookData
+                    data: bookData,
+                    symbol
                 }
             })
 
