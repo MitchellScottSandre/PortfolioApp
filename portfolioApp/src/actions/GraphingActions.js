@@ -54,72 +54,18 @@ const fetchStockBookData = (stockSymbol, dateRange) => {
 }
 
 const fetchCryptoBookData = (symbol, dateRange) => {
-    const { baseUrl, functions, apiKey } = API.ALPHA_VANTAGE
-    let dataFunction = ''
-    let dataFieldShortName = ''
-    let dataFunctionName = ''
-    switch (dateRange) {
-        case dateRangeOptions[0]:
-            dataFunction = functions.digitalCurrencyIntraday
-            dataFunctionName = 'Time Series (Digital Currency Intraday)'
-            dataFieldShortName = 'intraday'
-            break
-        case dateRangeOptions[1]:
-        case dateRangeOptions[2]:
-        case dateRangeOptions[3]:
-        case dateRangeOptions[4]:
-            dataFunction = functions.digitalCurrencyDaily
-            dataFunctionName = 'Time Series (Digital Currency Daily)'
-            dataFieldShortName = 'daily'
-            break
-        default:
-            dataFunction = functions.digitalCurrencyWeekly
-            dataFunctionName = 'Time Series (Digital Currency Weekly)'
-            dataFieldShortName = 'weekly'
-    }
-
-    const url = `${baseUrl}function=${dataFunction}&symbol=${symbol}&market=USD&apikey=${apiKey}`
-    console.log('url is:', url)
+    const { baseUrl } = API.CRYPTO_COMPARE
+    const { dateFunction, requestLimit } = getCryptoCompareParams(dateRange)
+    const url = `${baseUrl}${dateFunction}?fsym=${symbol}&tsym=USD&limit=${requestLimit}`
+    console.log('url is', url)
     return (dispatch) => {
         axios.get(url)
         .then(response => {
+            console.log(response)
             const { data } = response
-            let bookData = data[dataFunctionName]
+            const { Data, TimeFrom, TimeTo } = data
 
-            console.log('response is', response)
-            console.log('booKData is', bookData)
-            let bookMaxObjects = null
-            switch (dateRange) {
-                case dateRangeOptions[1]: // M
-                    bookMaxObjects = 31
-                    break
-                case dateRangeOptions[2]: // 3M
-                    bookMaxObjects = 90
-                    break
-                case dateRangeOptions[3]: // 6M
-                    bookMaxObjects = 182
-                    break
-                case dateRangeOptions[4]: // YTD TODO
-                    break
-                case dateRangeOptions[5]: // 1Y
-                    bookMaxObjects = 365
-                    break
-                case dateRangeOptions[6]: // 2Y
-                    bookMaxObjects = 365 * 2
-                    break
-            }
-
-            const processedBookData = processBookData(dateRange, bookData, 'ALPHA', bookMaxObjects, true)
-
-            dispatch({
-                type: SAVE_RAW_DATA_BY_SEARCH_RANGE,
-                payload: {
-                    investmentType: INVESTMENT_CRYPTOS,
-                    field: dataFieldShortName,
-                    data: bookData,
-                    symbol
-                }
-            })
+            const processedBookData = processBookData(dateRange, Data, 'CRYPTO_COMPARE')
 
             return saveBookData(dispatch, processedBookData, INVESTMENT_CRYPTOS, symbol, dateRange)
         })
@@ -166,21 +112,21 @@ const getFilters = (dateRange) => {
 const getDateField = (dateRange, apiSource) => {
     if (apiSource === 'IEX') {
         return dateRange === "1D" ? 'minute' : 'date'
-    } else if (apiSource === 'ALPHA') {
-        return 'USE_KEY'
+    } else if (apiSource === 'CRYPTO_COMPARE') {
+        return 'time'
     }
 }
 
 const getPriceField = (dateRange, apiSource) => {
     if (apiSource === 'IEX') {
         return dateRange === "1D" ? 'marketAverage' : 'close'
-    } else if (apiSource === 'ALPHA') {
-        return dateRange === "1D" ? '1b. price (USD)' : '4b. close (USD)'
+    } else if (apiSource === 'CRYPTO_COMPARE') {
+        return 'close'
     }
 }
 
 // Get the dateData, bookData, minVal, and maxVal from the API response data
-export const processBookData = (dateRange, allData, apiSource, maxIndex, reverseData) => {
+export const processBookData = (dateRange, allData, apiSource) => {
     const keys = Object.keys(allData)
     const numberItems = keys.length 
     const numberDatePoints = 5 
@@ -193,12 +139,9 @@ export const processBookData = (dateRange, allData, apiSource, maxIndex, reverse
     let minVal = Number.MAX_VALUE
     let maxVal = Number.MIN_VALUE
 
-    // let index = 0
-    let endIndex = maxIndex ? Math.min(maxIndex, numberItems) : numberItems
-    console.log('end index is', endIndex)
-    for (let i = 0; i < endIndex; i++) {
-        const data = allData[keys[i]]
-        const date = dateDataField === 'USE_KEY' ? keys[i] : data[dateDataField]
+    let i = 0
+    bookData = _.map(allData, data => {
+        const date = data[dateDataField]
         const numVal = apiSource === 'ALPHA' ? parseInt(data[valueDataField], 10) : data[valueDataField]
         if (i === 0) {
             dateData.push(date)
@@ -212,13 +155,63 @@ export const processBookData = (dateRange, allData, apiSource, maxIndex, reverse
         } else if (data[valueDataField] > maxVal) {
             maxVal = numVal
         }
-        bookData.push(numVal)
+        i++
+        return numVal
+    })
+
+    return {
+        bookData,
+        minVal,
+        maxVal,
+        dateData
+    }
+}
+
+const getCryptoCompareParams = (dateRange) => {
+    const { functions } = API.CRYPTO_COMPARE
+    let dateFunction = ''
+    let requestLimit = 0
+
+    switch (dateRange) {
+        case dateRangeOptions[0]:
+            dateFunction = functions.histoMinute
+            requestLimit = 500
+            break
+        case dateRangeOptions[1]:
+            dateFunction = functions.historyHour
+            requestLimit = 168 // 8h * 21 days
+            break
+        case dateRangeOptions[2]:
+            dateFunction = functions.historyHour
+            requestLimit = 168 * 3 // 3 months
+            break
+        case dateRangeOptions[3]:
+            dateFunction = functions.historicalDay
+            requestLimit = 6 * 21 // 6 months
+            break
+        case dateRangeOptions[4]:
+            dateFunction = functions.historicalDay
+            requestLimit = 6 * 21 // YTD TODO
+            break
+        case dateRangeOptions[5]:
+            dateFunction = functions.historicalDay
+            requestLimit = 12 * 21 // 1 year
+            break
+        case dateRangeOptions[6]:
+            dateFunction = functions.historicalDay
+            requestLimit = 2 * 12 * 21 // 2 year years
+            break
+        case dateRangeOptions[7]:
+            dateFunction = functions.historicalDay
+            requestLimit = 5 * 12 * 21 // 5 year years
+            break
+        default:
+            dateFunction = functions.historicalDay
+            requestLimit = 100
     }
 
     return {
-        bookData: reverseData ? bookData.reverse() : bookData,
-        minVal,
-        maxVal,
-        dateData: reverseData ? dateData.reverse() : dateData,
+        dateFunction,
+        requestLimit
     }
 }
