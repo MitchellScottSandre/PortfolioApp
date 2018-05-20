@@ -22,13 +22,15 @@ const API = {
         }
     },
     IEX_TRADING: {
-        baseUrl: 'https://api.iextrading.com/1.0'
+        baseUrl: 'https://api.iextrading.com/1.0',
+        name: 'IEX'
     },
     COIN_MARKET_CAP: {
         baseUrl: 'https://api.coinmarketcap.com/v2',
         listings: 'ticker/'
     },
     CRYPTO_COMPARE: {
+        name: 'CRYPTO_COMPARE',
         baseUrl: 'https://min-api.cryptocompare.com/data/',
         functions: {
             historicalDay: 'histoday',

@@ -4,6 +4,7 @@ import { API } from '../Constants'
 import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS } from './types'
 
 export const dateRangeOptions = ["1D", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"]
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export const getBookData = (investmentType, symbol, dateRange) => {
     console.log('Graphing Actions called', investmentType, symbol, dateRange)
@@ -97,60 +98,38 @@ const saveBookData = (dispatch, bookData, investmentType, symbol, dateRange) => 
     })
 }
 
-// Helper functions
-const getParams = (dateRange) => {
-    return `?&filter=${getFilters(dateRange)}`
-}
-
-const getFilters = (dateRange) => {
-    if (dateRange === "1D") {
-        return "minute,marketAverage,marketClose"
-    } 
-    
-    return "date,close"
-}
-
-const getDateField = (dateRange, apiSource) => {
-    if (apiSource === 'IEX') {
-        return dateRange === "1D" ? 'minute' : 'date'
-    } else if (apiSource === 'CRYPTO_COMPARE') {
-        return 'time'
-    }
-}
-
-const getPriceField = (dateRange, apiSource) => {
-    if (apiSource === 'IEX') {
-        return dateRange === "1D" ? 'marketAverage' : 'close'
-    } else if (apiSource === 'CRYPTO_COMPARE') {
-        return 'close'
-    }
-}
-
 // Get the dateData, bookData, minVal, and maxVal from the API response data
 export const processBookData = (dateRange, allData, apiSource) => {
     const keys = Object.keys(allData)
     const numberItems = keys.length 
     const numberDatePoints = 5 
-    const datePointGap = numberItems / numberDatePoints
+    const datePointGap = Math.round(numberItems / numberDatePoints)
     const dateDataField = getDateField(dateRange, apiSource)
     const valueDataField = getPriceField(dateRange, apiSource)
-
+    // console.log("datePointGap", datePointGap)
     let dateData = []
     let bookData = []
     let minVal = Number.MAX_VALUE
     let maxVal = Number.MIN_VALUE
-
+    
     let i = 0
     bookData = _.map(allData, data => {
-        const date = data[dateDataField]
         const numVal = apiSource === 'ALPHA' ? parseInt(data[valueDataField], 10) : data[valueDataField]
-        if (i === 0) {
-            dateData.push(date)
-        } else if (i === numberItems - 1) {
-            dateData.push(date)
-        } else if (i % datePointGap === 0) {
-            dateData.push(date)
+        if (apiSource === API.CRYPTO_COMPARE.name) {
+            // console.log("date ---> ", getFormattedDate(data[dateDataField], apiSource, dateRange), "-->", numVal)
+            // console.log("--> ", i, i % datePointGap === 0)
         }
+        if (i === 0 || i === numberItems - 1 || i % datePointGap === 0) {
+            const date = getFormattedDate(data[dateDataField], apiSource, dateRange)
+            if (i === 0) {
+                dateData.push(date)
+            } else if (i === numberItems - 1) {
+                dateData.push(date)
+            } else {
+                dateData.push(date)
+            }
+        }
+
         if (data[valueDataField] < minVal) {
             minVal = numVal
         } else if (data[valueDataField] > maxVal) {
@@ -168,46 +147,87 @@ export const processBookData = (dateRange, allData, apiSource) => {
     }
 }
 
+// Helper functions
+const getParams = (dateRange) => {
+    return `?&filter=${getFilters(dateRange)}`
+}
+
+const getFilters = (dateRange) => {
+    if (dateRange === "1D") {
+        return "minute,marketAverage,marketClose"
+    } 
+    
+    return "date,close"
+}
+
+const getDateField = (dateRange, apiSource) => {
+    if (apiSource === API.IEX_TRADING.name) {
+        return dateRange === "1D" ? 'minute' : 'date'
+    } else if (apiSource === API.CRYPTO_COMPARE.name) {
+        return 'time'
+    }
+}
+
+const getPriceField = (dateRange, apiSource) => {
+    if (apiSource === API.IEX_TRADING.name) {
+        return dateRange === "1D" ? 'marketAverage' : 'close'
+    } else if (apiSource === API.CRYPTO_COMPARE.name) {
+        return 'close'
+    }
+}
+
+const getFormattedDate = (dateInfo, apiSource, dateRange) => {
+    if (apiSource === API.CRYPTO_COMPARE.name) {
+        const date = new Date(dateInfo * 1000)
+        switch (dateRange) {
+            case dateRangeOptions[0]: return date.getHours()
+            default: return MONTHS[date.getMonth()] + date.getDate() + date.getHours()// day of the month
+        }
+    }
+
+    return dateInfo
+}
+
 const getCryptoCompareParams = (dateRange) => {
     const { functions } = API.CRYPTO_COMPARE
     let dateFunction = ''
     let requestLimit = 0
 
     switch (dateRange) {
-        case dateRangeOptions[0]:
+        case dateRangeOptions[0]: // 1 day
             dateFunction = functions.histoMinute
-            requestLimit = 500
+            requestLimit = 3600 // number minutes in a day
             break
-        case dateRangeOptions[1]:
+        case dateRangeOptions[1]: // 1 month
             dateFunction = functions.historyHour
-            requestLimit = 168 // 8h * 21 days
+            requestLimit = 24 * 31
             break
-        case dateRangeOptions[2]:
-            dateFunction = functions.historyHour
-            requestLimit = 168 * 3 // 3 months
-            break
-        case dateRangeOptions[3]:
+        case dateRangeOptions[2]: // 3 months
             dateFunction = functions.historicalDay
-            requestLimit = 6 * 21 // 6 months
+            requestLimit = 31 * 3
             break
-        case dateRangeOptions[4]:
+        case dateRangeOptions[3]: // 6 months
             dateFunction = functions.historicalDay
-            requestLimit = 6 * 21 // YTD TODO
+            requestLimit = 31 * 6 
             break
-        case dateRangeOptions[5]:
+        case dateRangeOptions[4]: // YTD TODO
             dateFunction = functions.historicalDay
-            requestLimit = 12 * 21 // 1 year
+            requestLimit = 6 * 21 
+            break
+        case dateRangeOptions[5]: // 1 year
+            dateFunction = functions.historicalDay
+            requestLimit = 365
             break
         case dateRangeOptions[6]:
             dateFunction = functions.historicalDay
-            requestLimit = 2 * 12 * 21 // 2 year years
+            requestLimit = 365 * 2 // 2 year years
             break
         case dateRangeOptions[7]:
             dateFunction = functions.historicalDay
-            requestLimit = 5 * 12 * 21 // 5 year years
+            requestLimit = 365 * 2 // 5 year years
             break
         default:
-            dateFunction = functions.historicalDay
+            dateFunction = functions.historicalDay 
             requestLimit = 100
     }
 
