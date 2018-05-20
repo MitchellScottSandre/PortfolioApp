@@ -3,11 +3,11 @@ import {
 } from '../actions/types'
 
 const INITIAL_STATE = {
-    stocks: {
-        symbol: '',
-        dateRange: '',
-        graphData: {}
-    }             
+    // stocks: {
+    //     symbol: '',
+    //     dateRange: '',
+    //     graphData: {}
+    // }             
 }
 
 export default (state = INITIAL_STATE, action) => {

@@ -12,17 +12,6 @@ const INVESTMENT_INFO = {
 }
 
 const API = {
-    ALPHA_VANTAGE: {
-        apiKey: '953M8HIRXV2KVV52', 
-        baseUrl: 'https://www.alphavantage.co/query?',
-        functions: {
-            batchStockQuotes: 'BATCH_STOCK_QUOTES',
-            timeSeriesDaily: 'TIME_SERIES_DAILY',
-            digitalCurrencyDaily: 'DIGITAL_CURRENCY_DAILY',
-            digitalCurrencyIntraday: 'DIGITAL_CURRENCY_INTRADAY',
-            digitalCurrencyWeekly: 'DIGITAL_CURRENCY_WEEKLY'
-        }
-    },
     SYMBOL_SEARCH: {
         baseUrl: 'http://d.yimg.com/aq/autoc?region=US&lang=en&query=',
         types: {
@@ -33,11 +22,21 @@ const API = {
         }
     },
     IEX_TRADING: {
-        baseUrl: 'https://api.iextrading.com/1.0'
+        baseUrl: 'https://api.iextrading.com/1.0',
+        name: 'IEX'
     },
     COIN_MARKET_CAP: {
         baseUrl: 'https://api.coinmarketcap.com/v2',
         listings: 'ticker/'
+    },
+    CRYPTO_COMPARE: {
+        name: 'CRYPTO_COMPARE',
+        baseUrl: 'https://min-api.cryptocompare.com/data/',
+        functions: {
+            historicalDay: 'histoday',
+            historyHour: 'histohour',
+            histoMinute: 'histominute'
+        }
     }
 }
 
@@ -51,3 +50,15 @@ export {
     CommonStyle,
     INVESTMENT_INFO
 }
+
+/*
+    Crypto Compare:
+time: 1526400960,
+close: 8535.64,
+high: 8537.21,
+low: 8534.89,
+open: 8536.14,
+volumefrom: 28.89,
+volumeto: 248060.02
+},
+*/
