@@ -32,6 +32,7 @@ export const SEARCH_CRYPROS = 'search_cryptos'
 
 // Graph Types
 export const SET_GRAPH_DATA = 'setGraphData'
+export const STARTING_FETCH_GRAPH_DATA = 'startingFetchGraphData'
 
 // Card Types
 export const ITEM_SELECTED = 'cardItemSelected'
