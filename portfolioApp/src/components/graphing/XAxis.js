@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 import _ from 'lodash'
 import { dateRangeOptions, MONTHS } from '../../actions/GraphingActions'
 
-export default class YAxis extends Component {
+export default class XAxis extends Component {
 
     _renderDate(date) {
         const { dateRange } = this.props
@@ -20,7 +20,6 @@ export default class YAxis extends Component {
     }
 
     render() {
-        console.log('xaxis --->', this.props)
         const { dateData } = this.props
 
         return (

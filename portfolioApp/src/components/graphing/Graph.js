@@ -87,7 +87,7 @@ class Graph extends Component {
                             contentInset={{ top: 0, bottom: 0 }}
                             gridMin={minVal}
                             gridMax={maxVal}
-                            animate
+                            // animate
                         />
                     }
                 </View>
