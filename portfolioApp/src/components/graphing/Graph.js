@@ -7,6 +7,7 @@ import { getBookData, dateRangeOptions } from '../../actions/GraphingActions'
 import YAxis from './YAxis'
 import XAxis from './XAxis'
 import DateRangeSelector from './DateRangeSelector'
+import LoadSpinner from '../common/LoadSpinner'
 
 const graphHeight = 150
 
@@ -20,6 +21,8 @@ class Graph extends Component {
             selectedName: '',
             selectedDateRange: dateRangeOptions[0],
             graphData: null,
+            loading: false,
+            investmentType: null
         }
     }
 
@@ -27,11 +30,15 @@ class Graph extends Component {
         const { investmentType, cardData, graphingData } = nextProps
 
         let data = []
-        if (graphingData && investmentType in graphingData && 'graphData' in graphingData[investmentType]) {
-            console.log('Graph -> ', investmentType, graphingData[investmentType].graphData)
-            data = graphingData[investmentType].graphData
-        }
+        if (graphingData && investmentType in graphingData) {
+            if ('graphData' in graphingData[investmentType]) {
+                console.log('Graph -> ', investmentType, graphingData[investmentType].graphData)
+                data = graphingData[investmentType].graphData
+            }
 
+            this.setState({ loading: graphingData[investmentType].loading, investmentType })
+        }
+        
         this.setState({ graphData: data })
 
         // If there is a selected item
@@ -68,7 +75,10 @@ class Graph extends Component {
                         maxVal={maxVal}
                         graphHeight={graphHeight}
                     />
-
+                    
+                    {this.state.loading && 
+                        <LoadSpinner />
+                    }
                     {!!bookData && 
                         <LineChart
                             style={{ height: graphHeight, flex: 1, marginLeft: 15 }}
@@ -77,12 +87,13 @@ class Graph extends Component {
                             contentInset={{ top: 0, bottom: 0 }}
                             gridMin={minVal}
                             gridMax={maxVal}
-                            animate
+                            // animate
                         />
                     }
                 </View>
                 <XAxis
                     dateData={dateData}
+                    dateRange={this.state.selectedDateRange}
                 />
                 <DateRangeSelector
                     dateRangeOptions={dateRangeOptions}
@@ -95,6 +106,7 @@ class Graph extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log('Graph props:', state.graphing)
     return {
         graphingData: state.graphing,
         cardData: state.cards

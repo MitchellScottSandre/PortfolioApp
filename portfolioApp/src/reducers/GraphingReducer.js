@@ -1,5 +1,6 @@
 import {
-    SET_GRAPH_DATA
+    SET_GRAPH_DATA,
+    STARTING_FETCH_GRAPH_DATA
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -19,10 +20,18 @@ export default (state = INITIAL_STATE, action) => {
                 [action.payload.investmentType]: {
                     symbol: action.payload.symbol,
                     dateRange: action.payload.dateRange,
-                    graphData: action.payload.graphData
+                    graphData: action.payload.graphData,
+                    loading: false
                 }
             }
-
+        case STARTING_FETCH_GRAPH_DATA:
+            console.log('starting fetch graph data')
+            return {
+                ...state,
+                [action.payload.investmentType]: {
+                    loading: true
+                }
+            }
         default: return state
     }
 }

@@ -1,10 +1,12 @@
 import axios from 'axios'
 import _ from 'lodash'
 import { API } from '../Constants'
-import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS } from './types'
+import { SET_GRAPH_DATA, SAVE_BOOK_DATA, INVESTMENT_STOCKS, INVESTMENT_CRYPTOS, STARTING_FETCH_GRAPH_DATA } from './types'
 
 export const dateRangeOptions = ["1D", "1M", "3M", "6M", "YTD", "1Y", "2Y", "5Y"]
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+// Matches ####-##-##
+const dateMatchExpr = new RegExp("[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))")
 
 export const getBookData = (investmentType, symbol, dateRange) => {
     console.log('Graphing Actions called', investmentType, symbol, dateRange)
@@ -27,13 +29,13 @@ export const getBookData = (investmentType, symbol, dateRange) => {
         } 
     
         console.log('-----> DATA DOESNT EXIST IN BOOK')
+        dispatch({type: STARTING_FETCH_GRAPH_DATA, payload: { investmentType }})
         switch (investmentType) {
             case INVESTMENT_STOCKS:
                 return dispatch(fetchStockBookData(symbol, dateRange))
             case INVESTMENT_CRYPTOS:
                 return dispatch(fetchCryptoBookData(symbol, dateRange))
             default:
-
         }
     }
 }
@@ -106,6 +108,7 @@ export const processBookData = (dateRange, allData, apiSource) => {
     const datePointGap = Math.round(numberItems / numberDatePoints)
     const dateDataField = getDateField(dateRange, apiSource)
     const valueDataField = getPriceField(dateRange, apiSource)
+    const today = new Date()
     // console.log("datePointGap", datePointGap)
     let dateData = []
     let bookData = []
@@ -120,7 +123,7 @@ export const processBookData = (dateRange, allData, apiSource) => {
             // console.log("--> ", i, i % datePointGap === 0)
         }
         if (i === 0 || i === numberItems - 1 || i % datePointGap === 0) {
-            const date = getFormattedDate(data[dateDataField], apiSource, dateRange)
+            const date = getFormattedDate(data[dateDataField], apiSource, dateRange, today)
             if (i === 0) {
                 dateData.push(date)
             } else if (i === numberItems - 1) {
@@ -176,12 +179,25 @@ const getPriceField = (dateRange, apiSource) => {
     }
 }
 
-const getFormattedDate = (dateInfo, apiSource, dateRange) => {
+const getFormattedDate = (dateInfo, apiSource, dateRange, todayDate) => {
     if (apiSource === API.CRYPTO_COMPARE.name) {
-        const date = new Date(dateInfo * 1000)
-        switch (dateRange) {
-            case dateRangeOptions[0]: return date.getHours()
-            default: return MONTHS[date.getMonth()] + date.getDate() + date.getHours()// day of the month
+        return new Date(dateInfo * 1000)
+        // const date = new Date(dateInfo * 1000)
+        // switch (dateRange) {
+        //     case dateRangeOptions[0]: return date.getHours()
+        //     // default: return MONTHS[date.getMonth()] + " " + date.getDate() 
+        // }
+    } else if (apiSource === API.IEX_TRADING.name) {
+        if (dateMatchExpr.test(dateInfo)) {
+            const year = dateInfo.substring(0, 4)
+            const month = dateInfo.substring(5, 7)
+            const day = dateInfo.substring(8, 10)
+            // return MONTHS[date.getMonth()] + " " + date.getDate()
+            return new Date(year, month, day)
+        } else {
+            const hour = parseInt(dateInfo.substring(0, 2), 10)
+            const minute = parseInt(dateInfo.substring(3, 5), 10)
+            return new Date(todayDate.getYear(), todayDate.getMonth(), todayDate.getDay(), hour, minute)
         }
     }
 
