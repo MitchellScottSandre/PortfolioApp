@@ -9,14 +9,14 @@ export const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', '
 const dateMatchExpr = new RegExp("[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))")
 
 export const getBookData = (investmentType, symbol, dateRange) => {
-    console.log('Graphing Actions called', investmentType, symbol, dateRange)
+    // console.log('Graphing Actions called', investmentType, symbol, dateRange)
 
     // First, check if the data already exists in bookData (from BookReducer)
     return (dispatch, getState) => {
         const { bookData } = getState()
         console.log('book data --->', bookData)
         if (bookData && investmentType in bookData && symbol in bookData[investmentType] && dateRange in bookData[investmentType][symbol]) {
-            console.log('-----> DATA ALREADY EXISTS IN BOOK')
+            // console.log('-----> DATA ALREADY EXISTS IN BOOK')
             return dispatch({
                 type: SET_GRAPH_DATA,
                 payload: {
@@ -28,8 +28,8 @@ export const getBookData = (investmentType, symbol, dateRange) => {
             })
         } 
     
-        console.log('-----> DATA DOESNT EXIST IN BOOK')
-        dispatch({type: STARTING_FETCH_GRAPH_DATA, payload: { investmentType }})
+        // console.log('-----> DATA DOESNT EXIST IN BOOK')
+        dispatch({ type: STARTING_FETCH_GRAPH_DATA, payload: { investmentType } })
         switch (investmentType) {
             case INVESTMENT_STOCKS:
                 return dispatch(fetchStockBookData(symbol, dateRange))
@@ -45,11 +45,11 @@ const fetchStockBookData = (stockSymbol, dateRange) => {
     const { baseUrl } = API.IEX_TRADING
 
     const url = `${baseUrl}/stock/${stockSymbol}/chart/${dateRange}/${getParams(dateRange)}`
-    console.log('fetch stock url:', url)
+    // console.log('fetch stock url:', url)
     return (dispatch) => {
         axios.get(url)
             .then((response) => {
-                console.log('fetch stock response', response)
+                // console.log('fetch stock response', response)
                 const bookInfo = response.data
                 const processedBookData = processBookData(dateRange, bookInfo, 'IEX')
                 return saveBookData(dispatch, processedBookData, INVESTMENT_STOCKS, stockSymbol, dateRange)
@@ -61,11 +61,11 @@ const fetchCryptoBookData = (symbol, dateRange) => {
     const { baseUrl } = API.CRYPTO_COMPARE
     const { dateFunction, requestLimit } = getCryptoCompareParams(dateRange)
     const url = `${baseUrl}${dateFunction}?fsym=${symbol}&tsym=USD&limit=${requestLimit}`
-    console.log('url is', url)
+    // console.log('url is', url)
     return (dispatch) => {
         axios.get(url)
         .then(response => {
-            console.log(response)
+            // console.log(response)
             const { data } = response
             const { Data } = data
 
@@ -77,8 +77,8 @@ const fetchCryptoBookData = (symbol, dateRange) => {
 }
 
 const saveBookData = (dispatch, bookData, investmentType, symbol, dateRange) => {
-    console.log('save book data:')
-    console.log(bookData, investmentType, symbol, dateRange)
+    // console.log('save book data:')
+    // console.log(bookData, investmentType, symbol, dateRange)
     dispatch({
         type: SAVE_BOOK_DATA,
         payload: {

@@ -22,7 +22,6 @@ export default (state = INITIAL_STATE, action) => {
     let currInvestmentData, currSymbolDatath
     switch (action.type) {
         case SAVE_BOOK_DATA:
-            console.log('book reducer,', action)
             currInvestmentData = state[action.payload.investmentType] || {}
             currSymbolData = action.payload.symbol in currInvestmentData ? currInvestmentData[action.payload.symbol] : {}
             return {
@@ -37,7 +36,6 @@ export default (state = INITIAL_STATE, action) => {
             }
 
         case BOOK_CRYPTO_FETCH_ALL_PRICE_SUCCESS: 
-            console.log('INVESTMENT_CRYPTO_FETCH_ALL_SUCCESS', action.payload)
             return {
                 ...state,
                 cryptoPrices: action.payload

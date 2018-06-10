@@ -1,53 +1,42 @@
 import React, { Component } from 'react'
-import { View, Text, Image } from 'react-native'
-import numeral from 'numeral'
-import { connect } from 'react-redux'
-import { investmentUpdateTotals } from '../../../../actions/InvestmentActions'
+import { View, Text } from 'react-native'
+import { GLOBAL_FONT_STYLES } from '../../../common/CommonStyles'
 
-class InvestmentSummary extends Component {
-    
-    constructor(props) {
-        super(props)
-        this.state = {
-            totalBookValue: null,
-            totalMarketValue: null,
-            dollarChange: null,
-            percentChange: null
-        }
-    }
+export default class InvestmentSummary extends Component {
 
-    componentWillReceiveProps(nextProps) {
-        this._calculateValues(nextProps)
-    }
-
-    _calculateValues(props) {
-        const { data, investmentType } = props
-        let totalBookValue = 0
-        let totalMarketValue = 0
-        data.forEach((investment) => {
-            const { amount, averagePrice, latestPrice } = investment
-            totalBookValue += amount * averagePrice
-            totalMarketValue += amount * latestPrice
-        })
-        this.setState({
-            totalBookValue: numeral(totalBookValue).format('$0,0.00'),
-            totalMarketValue: numeral(totalMarketValue).format('$0,0.00'),
-            dollarChange: numeral(totalMarketValue - totalBookValue).format('$0,0.00'),
-            percentChange: numeral((totalMarketValue / totalBookValue) - 1).format('0.00%')
-        })
-        // props.investmentUpdateTotals({ investmentType, totalBookValue, totalMarketValue })
+    _renderItem(name, value) {
+        const { itemContainerStyle } = styles
+        return (
+            <View style={itemContainerStyle}>
+                <Text style={GLOBAL_FONT_STYLES.subheading_emphasized_black}>{name}</Text>
+                <Text style={GLOBAL_FONT_STYLES.subheading_black}>{value}</Text>
+            </View>
+        )
     }
     
     render() {
+        const { totalMarketValue, totalBookValue, dollarChange, percentChange } = this.props.data || {}
+        const { containerStyle } = styles
         return (
-            <View>
-                {/* <Text> */}
-                <Text>{this.state.totalMarketValue} | {this.state.totalBookValue} | {this.state.dollarChange} | {this.state.percentChange}</Text>
-
+            <View style={containerStyle}>
+                {this._renderItem('Market', totalMarketValue)}
+                {this._renderItem('Book', totalBookValue)}
+                {this._renderItem('Change ($)', dollarChange)}
+                {this._renderItem('Change (%)', percentChange)}
             </View>
         )
     }
 }
 
-
-export default connect(null, { investmentUpdateTotals })(InvestmentSummary)
+const styles = {
+    containerStyle: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    itemContainerStyle: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+}

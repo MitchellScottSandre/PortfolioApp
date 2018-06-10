@@ -3,18 +3,11 @@ import {
     STARTING_FETCH_GRAPH_DATA
 } from '../actions/types'
 
-const INITIAL_STATE = {
-    // stocks: {
-    //     symbol: '',
-    //     dateRange: '',
-    //     graphData: {}
-    // }             
-}
+const INITIAL_STATE = { }
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case SET_GRAPH_DATA:
-            console.log('set graph data', action)
             return {
                 ...state,
                 [action.payload.investmentType]: {
@@ -25,7 +18,6 @@ export default (state = INITIAL_STATE, action) => {
                 }
             }
         case STARTING_FETCH_GRAPH_DATA:
-            console.log('starting fetch graph data')
             return {
                 ...state,
                 [action.payload.investmentType]: {

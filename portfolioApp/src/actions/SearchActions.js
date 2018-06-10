@@ -39,7 +39,7 @@ export const searchByInvestmentType = (dispatch, getState, investmentType, text)
     } else {
         baseUrl = API.SYMBOL_SEARCH.baseUrl
         const url = `${baseUrl}${text}`
-        console.log('searchByInvestmentType url is:', url)
+        // console.log('searchByInvestmentType url is:', url)
         axios.get(url)
         .then((response) => {
             let typeFilter = getSearchTypeByInvestmentType(investmentType)

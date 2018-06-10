@@ -82,7 +82,7 @@ export const investmentFetchAll = (investmentType) => {
 const stockFetchAllLatestPrices = (dispatch, symbolsString, stocks) => {
     if (symbolsString.length === 0) return
     const { baseUrl } = API.IEX_TRADING
-    let url = `${baseUrl}/stock/market/batch?symbols=${symbolsString}&types=quote`
+    const url = `${baseUrl}/stock/market/batch?symbols=${symbolsString}&types=quote`
 
     axios.get(url)
         .then((response) => {

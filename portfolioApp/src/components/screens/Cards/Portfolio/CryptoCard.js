@@ -49,7 +49,7 @@ class CryptoCard extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('Crypto Card props from redux', state)
+    // console.log('Crypto Card props from redux', state)
 
     return {
         cryptos: _.map(state.investments.cryptos, (crypto) => { return crypto }),

@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
-import { setSelectedItem } from '../../../../actions/CardActions'
 
+import { setSelectedItem } from '../../../../actions/CardActions'
 import { Header } from 'react-native-elements'
 import SmartCard from '../common/SmartCard'
 import InvestmentListItem from './InvestmentListItem'
 import InvestmentSummary from './InvestmentSummary'
 import Graph from '../../../graphing/Graph'
+import * as ScalingUtils from '../../../../utils/scalingUtils'
+import * as CommonStyles from '../../../common/CommonStyles'
 
 class InvestmentCard extends Component {
 
@@ -22,19 +24,20 @@ class InvestmentCard extends Component {
     }
     
     render() {
-        const { onPlusButtonPress, data, investmentType, title } = this.props
+        const { onPlusButtonPress, investmentType, title, summaryData } = this.props
+        const { headerBlockStyle } = styles
 
         return (
             <SmartCard {...this.props} showPlusButton >
                 <View>
                     <Header
-                        leftComponent={<Text style={{ color: 'white' }}>{title}</Text>}
+                        leftComponent={<Text style={CommonStyles.GLOBAL_FONT_STYLES.title_white}>{title}</Text>}
                         rightComponent={{ icon: 'add', color: '#fff', onPress: onPlusButtonPress }}
-                        outerContainerStyles={{ height: 40, paddingLeft: 15, paddingRight: 15, paddingBottom: 0, paddingTop: 0, marginBottom: 20 }}
+                        outerContainerStyles={headerBlockStyle}
                         innerContainerStyles={{ alignItems: 'center' }}
                     />
 
-                    <InvestmentSummary data={data} investmentType={investmentType} />
+                    <InvestmentSummary data={summaryData && summaryData[investmentType]} />
 
                     <ScrollView style={{ height: 300 }}>
                         {this._renderData()}
@@ -49,9 +52,23 @@ class InvestmentCard extends Component {
     }
 }
 
+const styles = {
+    headerBlockStyle: {
+        height: ScalingUtils.moderateScale(50),
+        borderRadius: ScalingUtils.moderateScale(5),
+        paddingLeft: ScalingUtils.moderateScale(20), 
+        paddingRight: ScalingUtils.moderateScale(20), 
+        paddingBottom: 0, 
+        paddingTop: 0, 
+        marginBottom: ScalingUtils.moderateScale(10),
+        backgroundColor: CommonStyles.GLOBAL_COLORS.accent
+    }
+}
+
 const mapStateToProps = state => {
     return {
-        cardData: state.cards
+        cardData: state.cards,
+        summaryData: state.investments.summaryData
     }
 }
 

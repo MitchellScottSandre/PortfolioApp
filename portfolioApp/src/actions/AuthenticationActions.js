@@ -58,7 +58,6 @@ export const loginUser = ({ email, password }) => {
 }
 
 export const authorizationSuccess = (dispatch, user) => {
-    console.log('authorization Success!, user: ', user)
     dispatch({
         type: AUTHORIZATION_SUCCESS, 
         payload: user 

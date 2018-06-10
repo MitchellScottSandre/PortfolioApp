@@ -4,12 +4,13 @@ import firebase from 'firebase'
 import { createStore, applyMiddleware } from 'redux'
 import { Navigation } from 'react-native-navigation'
 import { Provider } from 'react-redux'
+import logger from 'redux-logger'
 import reducer from './reducers'
 import registerScreens from './components/screens/screens'
 import * as types from './actions/types'
 import * as appActions from './actions'
 
-const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore)
+const createStoreWithMiddleware = applyMiddleware(ReduxThunk, logger)(createStore)
 const store = createStoreWithMiddleware(reducer)
 registerScreens(store, Provider)
 
@@ -53,7 +54,7 @@ export default class App extends Component {
                 })
                 return
             case types.MAIN_SCREENS:
-                console.log('switching to main screens in app js')
+                // console.log('switching to main screens in app js')
                 Navigation.startTabBasedApp({
                     tabs: [
                         // {

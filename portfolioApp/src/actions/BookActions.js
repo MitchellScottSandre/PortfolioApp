@@ -4,10 +4,8 @@ import { API } from '../Constants'
 import { BOOK_CRYPTO_FETCH_ALL_PRICE_SUCCESS } from './types'
 
 export const cryptoFetchAllPriceData = () => {
-    console.log('cryptoFetchAllPriceData')
     const { baseUrl } = API.COIN_MARKET_CAP
     const url = `${baseUrl}/${API.COIN_MARKET_CAP.listings}`
-    console.log(url)
     return (dispatch) => {
         axios.get(url)
             .then((response) => {

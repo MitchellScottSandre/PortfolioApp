@@ -32,7 +32,7 @@ class Graph extends Component {
         let data = []
         if (graphingData && investmentType in graphingData) {
             if ('graphData' in graphingData[investmentType]) {
-                console.log('Graph -> ', investmentType, graphingData[investmentType].graphData)
+                // console.log('Graph -> ', investmentType, graphingData[investmentType].graphData)
                 data = graphingData[investmentType].graphData
             }
 
@@ -106,7 +106,6 @@ class Graph extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log('Graph props:', state.graphing)
     return {
         graphingData: state.graphing,
         cardData: state.cards
