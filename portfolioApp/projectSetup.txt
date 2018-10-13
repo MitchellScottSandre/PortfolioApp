@@ -1,0 +1,9 @@
+rm -rf node_modules/ && yarn cache clean && yarn install
+node_modules/react-native/scripts/ios-install-third-party.sh
+cd node_modules/react-native/third-party/glog-0.3.4
+./configure
+
+Libraries > RCTWebSocket (click) > Build Phases > Link Binary with Libraries > add libfishhook.a (so that it has the icon)
+
+install watchman
+https://wix.github.io/react-native-navigation/#/installation-ios
